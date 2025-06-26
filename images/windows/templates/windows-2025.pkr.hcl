@@ -272,7 +272,7 @@ source "proxmox-iso" "base" {
   // VM TEMPLATE CONFIGURATION
   template_name        = var.base_template_name
   vm_name              = "win-instance-${formatdate("YYYYMMDD-hhmmss", timestamp())}"
-  template_description = "Windows 2022 Base Image\nCreated on: ${formatdate("EEE, DD MMM YYYY hh:mm:ss ZZZ", timestamp())}"
+  template_description = "Windows 2025 Base Image\nCreated on: ${formatdate("EEE, DD MMM YYYY hh:mm:ss ZZZ", timestamp())}"
   os                   = "win11"
 
   // HARDWARE CONFIGURATION
