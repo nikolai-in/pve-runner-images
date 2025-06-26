@@ -201,7 +201,7 @@ variable "imagedata_file" {
 
 variable "temp_dir" {
   type    = string
-  default = "D:\\temp"
+  default = "C:\\temp"
 }
 
 variable "install_password" {
@@ -408,6 +408,7 @@ build {
     "source.proxmox-clone.runner"
   ]
 
+  // Create required directories for image build process
   provisioner "powershell" {
     inline = [
       "New-Item -Path ${var.image_folder} -ItemType Directory -Force",
@@ -415,6 +416,7 @@ build {
     ]
   }
 
+  // Copy build assets, scripts, and toolsets to the VM
   provisioner "file" {
     destination = "${var.image_folder}\\"
     sources = [
@@ -424,11 +426,13 @@ build {
     ]
   }
 
+  // Copy software report generation scripts
   provisioner "file" {
     destination = "${var.image_folder}\\scripts\\docs-gen\\"
     source      = "${path.root}/../../../helpers/software-report-base"
   }
 
+  // Reorganize copied files into proper directory structure for the build process
   provisioner "powershell" {
     inline = [
       "Move-Item '${var.image_folder}\\assets\\post-gen' 'C:\\post-generation'",
@@ -444,6 +448,7 @@ build {
     ]
   }
 
+  // Configure Windows user account and WinRM authentication for build process
   provisioner "windows-shell" {
     inline = [
       "net user ${var.install_user} ${var.install_password} /add /passwordchg:no /passwordreq:yes /active:yes /Y",
@@ -453,10 +458,13 @@ build {
     ]
   }
 
+  // Verify user was added to Administrators group successfully
   provisioner "powershell" {
     inline = ["if (-not ((net localgroup Administrators) -contains '${var.install_user}')) { exit 1 }"]
   }
 
+  // Install core system components and configure base settings
+  // Tests: PowerShellModules.Tests.ps1 (verify PowerShell modules), WindowsFeatures.Tests.ps1 (verify Windows features)
   provisioner "powershell" {
     environment_vars = ["IMAGE_VERSION=${var.image_version}", "IMAGE_OS=${var.image_os}", "AGENT_TOOLSDIRECTORY=${var.agent_tools_directory}", "IMAGEDATA_FILE=${var.imagedata_file}", "IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
     execution_policy = "unrestricted"
@@ -474,16 +482,20 @@ build {
     ]
   }
 
+  // Wait for Windows container feature to be fully enabled before proceeding
   provisioner "windows-restart" {
     check_registry        = true
     restart_check_command = "powershell -command \"& {while ( (Get-WindowsOptionalFeature -Online -FeatureName Containers -ErrorAction SilentlyContinue).State -ne 'Enabled' ) { Start-Sleep 30; Write-Output 'InProgress' }}\""
     restart_timeout       = "10m"
   }
 
+  // Disable WLAN service (not needed in VM environment)
   provisioner "powershell" {
     inline = ["Set-Service -Name wlansvc -StartupType Manual", "if ($(Get-Service -Name wlansvc).Status -eq 'Running') { Stop-Service -Name wlansvc}"]
   }
 
+  // Install container tools and development platform components
+  // Tests: Docker.Tests.ps1 (verify Docker engine, compose, credential helper), PowerShellCore.Tests.ps1 (verify PowerShell Core)
   provisioner "powershell" {
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
     scripts = [
@@ -496,10 +508,13 @@ build {
     ]
   }
 
+  // Restart after Visual Studio installation (may require reboot for components)
   provisioner "windows-restart" {
     restart_timeout = "30m"
   }
 
+  // Install Visual Studio IDE and Kubernetes development tools
+  // Tests: VisualStudio.Tests.ps1 (verify VS installation, components, workloads), Kubernetes.Tests.ps1 (verify kubectl, helm, minikube)
   provisioner "powershell" {
     elevated_password = "${var.install_password}"
     elevated_user     = "${var.install_user}"
@@ -511,11 +526,15 @@ build {
     valid_exit_codes = [0, 3010]
   }
 
+  // Restart after Visual Studio extensions and additional components
   provisioner "windows-restart" {
     check_registry  = true
     restart_timeout = "10m"
   }
 
+  // Install development tools, cloud CLI tools, and package managers
+  // Tests: Wix.Tests.ps1 (WiX Toolset), Vsix.Tests.ps1 (VS extensions), AzureCli.Tests.ps1 (Azure CLI), 
+  //        ChocolateyPackages.Tests.ps1 (Chocolatey packages), JavaTools.Tests.ps1 (Java, Maven, Gradle), Kotlin.Tests.ps1 (Kotlin)
   provisioner "powershell" {
     pause_before     = "2m0s"
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
@@ -531,16 +550,27 @@ build {
     ]
   }
 
+  // Install Service Fabric SDK with different execution policy
+  // Tests: ServiceFabricSDK.Tests.ps1 (verify Service Fabric SDK installation and tools)
   provisioner "powershell" {
     execution_policy = "remotesigned"
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
     scripts          = ["${path.root}/../scripts/build/Install-ServiceFabricSDK.ps1"]
   }
 
+  // Restart after Service Fabric SDK installation
   provisioner "windows-restart" {
     restart_timeout = "10m"
   }
 
+  // Install programming languages, development frameworks, and web browsers
+  // Tests: Ruby.Tests.ps1 (Ruby, gems), Node.Tests.ps1 (Node.js, npm, yarn), AndroidSDK.Tests.ps1 (Android SDK), 
+  //        PowerShellAzModules.Tests.ps1 (Azure PowerShell modules), PipxPackages.Tests.ps1 (Python pipx packages),
+  //        Git.Tests.ps1 (Git, Git LFS), PHP.Tests.ps1 (PHP, Composer), Rust.Tests.ps1 (Rust, Cargo),
+  //        Browsers.Tests.ps1 (Chrome, Firefox), Selenium.Tests.ps1 (WebDriver), Apache.Tests.ps1 (Apache), Nginx.Tests.ps1 (Nginx),
+  //        MSYS2.Tests.ps1 (MSYS2 environment), WinAppDriver.Tests.ps1 (Windows Application Driver), R.Tests.ps1 (R language),
+  //        AWS.Tests.ps1 (AWS CLI/tools), DotnetSDK.Tests.ps1 (.NET SDK), Haskell.Tests.ps1 (Haskell, Stack),
+  //        Miniconda.Tests.ps1 (Conda), Tools.Tests.ps1 (various development tools), MongoDB.Tests.ps1 (MongoDB)
   provisioner "powershell" {
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
     scripts = [
@@ -589,6 +619,9 @@ build {
     ]
   }
 
+  // Install database systems, Windows updates, and system configuration with elevated privileges
+  // Tests: PostgreSQL.Tests.ps1 (PostgreSQL installation), Shell.Tests.ps1 (shell configuration), 
+  //        LLVM.Tests.ps1 (LLVM toolchain)
   provisioner "powershell" {
     elevated_password = "${var.install_password}"
     elevated_user     = "${var.install_user}"
@@ -604,12 +637,17 @@ build {
     ]
   }
 
+  // Final restart to ensure all Windows updates and system changes take effect
+  // Wait for TiWorker.exe (Windows Module Installer) to finish before proceeding
   provisioner "windows-restart" {
     check_registry        = true
     restart_check_command = "powershell -command \"& {if ((-not (Get-Process TiWorker.exe -ErrorAction SilentlyContinue)) -and (-not [System.Environment]::HasShutdownStarted) ) { Write-Output 'Restart complete' }}\""
     restart_timeout       = "30m"
   }
 
+  // Final cleanup, run comprehensive test suite, and validate all installations
+  // Tests: RunAll-Tests.ps1 (executes all *.Tests.ps1 files to validate entire image installation)
+  //        This includes validation of all previously installed components, tools, SDKs, and configurations
   provisioner "powershell" {
     pause_before     = "2m0s"
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
@@ -620,19 +658,27 @@ build {
     ]
   }
 
+  // Validate test results exist before proceeding
+  // Ensures that the comprehensive test suite executed successfully and produced results
   provisioner "powershell" {
     inline = ["if (-not (Test-Path ${var.image_folder}\\tests\\testResults.xml)) { throw '${var.image_folder}\\tests\\testResults.xml not found' }"]
   }
 
+  // Generate comprehensive software report documenting all installed components
+  // Creates markdown and JSON reports listing all software, tools, and versions installed in the image
   provisioner "powershell" {
     environment_vars = ["IMAGE_VERSION=${var.image_version}", "IMAGE_FOLDER=${var.image_folder}"]
     inline           = ["pwsh -File '${var.image_folder}\\SoftwareReport\\Generate-SoftwareReport.ps1'"]
   }
 
+  // Validate software reports were generated successfully
+  // Ensures both markdown and JSON software reports exist before proceeding
   provisioner "powershell" {
     inline = ["if (-not (Test-Path C:\\software-report.md)) { throw 'C:\\software-report.md not found' }", "if (-not (Test-Path C:\\software-report.json)) { throw 'C:\\software-report.json not found' }"]
   }
 
+  // Download software reports from VM to host for documentation
+  // Retrieves the generated software documentation files for external use
   provisioner "file" {
     destination = "${path.root}/../Windows2025-Readme.md"
     direction   = "download"
@@ -645,6 +691,8 @@ build {
     source      = "C:\\software-report.json"
   }
 
+  // Final system configuration and user setup before image finalization
+  // Performs final optimizations and user account configuration
   provisioner "powershell" {
     environment_vars = ["INSTALL_USER=${var.install_user}"]
     scripts = [
@@ -655,6 +703,8 @@ build {
     skip_clean = true
   }
 
+  // Final restart and Windows sysprep to generalize the image
+  // Prepares the Windows installation for deployment by removing unique identifiers
   provisioner "windows-restart" {
     restart_timeout = "10m"
   }
