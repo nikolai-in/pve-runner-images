@@ -1,37 +1,177 @@
+packer {
+  required_plugins {
+    proxmox = {
+      version = "> 1.2.3"
+      source  = "github.com/nikolai-in/proxmox"
+    }
+    windows-update = {
+      version = "> 0.16.10"
+      source  = "github.com/rgl/windows-update"
+    }
+  }
+}
+
+// Proxmox related variables
+variable "proxmox_url" {
+  type        = string
+  description = "Proxmox Server URL"
+}
+
+variable "proxmox_insecure" {
+  type        = bool
+  description = "Allow insecure connections to Proxmox"
+  default     = false
+}
+
+variable "proxmox_user" {
+  type        = string
+  description = "Proxmox username"
+  sensitive   = true
+}
+
+variable "proxmox_password" {
+  type        = string
+  description = "Proxmox password"
+  sensitive   = true
+}
+
+variable "node" {
+  type        = string
+  description = "Proxmox cluster node"
+}
+
+// Proxmox storage related variables
+variable "iso_storage" {
+  type        = string
+  description = "Proxmox storage location for iso files"
+  default     = "local"
+}
+
+variable "disk_storage" {
+  type        = string
+  description = "Disk storage location"
+  default     = "local-lvm"
+}
+
+variable "efi_storage" {
+  type        = string
+  description = "Location of EFI storage on proxmox host"
+  default     = "local-lvm"
+}
+
+variable "cloud_init_storage" {
+  type        = string
+  description = "Location of cloud-init files/iso/yaml config"
+  default     = "local-lvm"
+}
+
+// VM hardware related variables
+variable "memory" {
+  type        = number
+  description = "Amount of RAM in MB"
+  default     = 8192
+}
+
+variable "ballooning_minimum" {
+  type        = number
+  description = "Minimum amount of RAM in MB for ballooning"
+  default     = 2048
+}
+
+variable "cores" {
+  type        = number
+  description = "Amount of CPU cores"
+  default     = 2
+}
+
+variable "socket" {
+  type        = number
+  description = "Amount of CPU sockets"
+  default     = 1
+}
+
+variable "disk_size_gb" {
+  type        = string
+  description = "The size of the disk, including a unit suffix, such as 10G to indicate 10 gigabytes"
+  default     = "64G"
+}
+
+variable "disk_extend_gb" {
+  type        = string
+  description = "The size of the extended runner disk, including a unit suffix, such as 10G to indicate 10 gigabytes"
+  default     = "256G"
+}
+
+variable "bridge" {
+  type        = string
+  description = "Network bridge name"
+  default     = "vmbr0"
+}
+
+// Windows related variables
+
+variable "windows_iso" {
+  type        = string
+  description = "Windows ISO file name"
+  default     = "en-us_windows_server_2025_eval_x64fre.iso"
+}
+
+variable "image_index" {
+  type        = string
+  description = "Image index in the Windows ISO file"
+  default     = "2"
+}
+
+variable "license_key" {
+  type        = string
+  description = "Windows license key, leave empty for evaluation version"
+  default     = ""
+  validation {
+    condition     = var.license_key == "" || can(regex("^([A-Za-z0-9]{5}-){4}[A-Za-z0-9]{5}$", var.license_key))
+    error_message = "The license_key must be either empty for evaluation version or in the format XXXXX-XXXXX-XXXXX-XXXXX-XXXXX."
+  }
+}
+
+variable "virtio_win_iso" {
+  type        = string
+  description = "Virtio-win ISO file"
+  default     = "virtio-win.iso"
+}
+
+variable "cdrom_drive" {
+  type        = string
+  description = "CD-ROM Drive letter for extra iso"
+  default     = "D:"
+}
+
+variable "virtio_cdrom_drive" {
+  type        = string
+  description = "CD-ROM Drive letter for virtio-win iso"
+  default     = "E:"
+}
+
+variable "timezone" {
+  type        = string
+  description = "Windows timezone"
+  default     = "UTC"
+}
+
+variable "base_template_name" {
+  type        = string
+  description = "Name for the base template in Proxmox"
+  default     = "win25-base"
+}
+
+variable "runner_template_name" {
+  type        = string
+  description = "Name for the runner template in Proxmox"
+  default     = "win25-runner"
+}
+
+// Build scripts related variables
 variable "agent_tools_directory" {
   type    = string
   default = "C:\\hostedtoolcache\\windows"
-}
-
-variable "allowed_inbound_ip_addresses" {
-  type    = list(string)
-  default = []
-}
-
-variable "azure_tags" {
-  type    = map(string)
-  default = {}
-}
-
-variable "build_resource_group_name" {
-  type    = string
-  default = "${env("BUILD_RG_NAME")}"
-}
-
-variable "client_cert_path" {
-  type    = string
-  default = "${env("ARM_CLIENT_CERT_PATH")}"
-}
-
-variable "client_id" {
-  type    = string
-  default = "${env("ARM_CLIENT_ID")}"
-}
-
-variable "client_secret" {
-  type      = string
-  default   = "${env("ARM_CLIENT_SECRET")}"
-  sensitive = true
 }
 
 variable "helper_script_folder" {
@@ -66,198 +206,207 @@ variable "temp_dir" {
 
 variable "install_password" {
   type      = string
-  default   = ""
+  default   = "GetsugaTenshou"
   sensitive = true
 }
 
 variable "install_user" {
   type    = string
-  default = "installer"
+  default = "Administrator"
 }
 
-variable "location" {
-  type    = string
-  default = ""
-}
+source "proxmox-iso" "base" {
 
-variable "managed_image_name" {
-  type    = string
-  default = ""
-}
+  // PROXMOX CONNECTION CONFIGURATION
+  proxmox_url              = var.proxmox_url
+  insecure_skip_tls_verify = var.proxmox_insecure
+  username                 = var.proxmox_user
+  password                 = var.proxmox_password
+  node                     = var.node
 
-variable "managed_image_resource_group_name" {
-  type    = string
-  default = "${env("ARM_RESOURCE_GROUP")}"
-}
+  // BIOS & MACHINE CONFIGURATION
+  bios    = "ovmf"
+  machine = "q35"
 
-variable "managed_image_storage_account_type" {
-  type    = string
-  default = "Premium_LRS"
-}
-
-variable "object_id" {
-  type    = string
-  default = "${env("ARM_OBJECT_ID")}"
-}
-
-variable "private_virtual_network_with_public_ip" {
-  type    = bool
-  default = false
-}
-
-variable "subscription_id" {
-  type    = string
-  default = "${env("ARM_SUBSCRIPTION_ID")}"
-}
-
-variable "temp_resource_group_name" {
-  type    = string
-  default = "${env("TEMP_RESOURCE_GROUP_NAME")}"
-}
-
-variable "tenant_id" {
-  type    = string
-  default = "${env("ARM_TENANT_ID")}"
-}
-
-variable "virtual_network_name" {
-  type    = string
-  default = "${env("VNET_NAME")}"
-}
-
-variable "virtual_network_resource_group_name" {
-  type    = string
-  default = "${env("VNET_RESOURCE_GROUP")}"
-}
-
-variable "virtual_network_subnet_name" {
-  type    = string
-  default = "${env("VNET_SUBNET")}"
-}
-
-variable "vm_size" {
-  type    = string
-  default = "Standard_F8s_v2"
-}
-
-variable "image_offer" {
-  type    = string
-  default = "WindowsServer"
-}
-
-variable "image_publisher" {
-  type    = string
-  default = "MicrosoftWindowsServer"
-}
-
-variable "image_sku" {
-  type    = string
-  default = "2025-Datacenter"
-}
-
-variable "gallery_name" {
-  type    = string
-  default = "${env("GALLERY_NAME")}"
-}
-
-variable "gallery_resource_group_name" {
-  type    = string
-  default = "${env("GALLERY_RG_NAME")}"
-}
-
-variable "gallery_image_name" {
-  type    = string
-  default = "${env("GALLERY_IMAGE_NAME")}"
-}
-
-variable "gallery_image_version" {
-  type    = string
-  default = "${env("GALLERY_IMAGE_VERSION")}"
-}
-
-variable "gallery_storage_account_type" {
-  type    = string
-  default = "${env("GALLERY_STORAGE_ACCOUNT_TYPE")}"
-}
-
-variable "build_key_vault_name" {
-  type    = string
-  default = "${env("BUILD_KEY_VAULT_NAME")}"
-}
-
-variable "build_key_vault_secret_name" {
-  type    = string
-  default = "${env("BUILD_KEY_VAULT_SECRET_NAME")}"
-}
-
-variable "use_azure_cli_auth" {
-  type    = bool
-  default = false
-}
-
-variable "os_disk_size_gb" {
-  type    = number
-  default = 150
-}
-
-variable "image_os_type" {
-  type    = string
-  default = "Windows"
-}
-
-source "azure-arm" "image" {
-  allowed_inbound_ip_addresses           = "${var.allowed_inbound_ip_addresses}"
-  build_resource_group_name              = "${var.build_resource_group_name}"
-  client_cert_path                       = "${var.client_cert_path}"
-  client_id                              = "${var.client_id}"
-  client_secret                          = "${var.client_secret}"
-  use_azure_cli_auth                     = var.use_azure_cli_auth
-  communicator                           = "winrm"
-  image_offer                            = "${var.image_offer}"
-  image_publisher                        = "${var.image_publisher}"
-  image_sku                              = "${var.image_sku}"
-  location                               = "${var.location}"
-  managed_image_name                     = "${var.managed_image_name}"
-  managed_image_resource_group_name      = "${var.managed_image_resource_group_name}"
-  managed_image_storage_account_type     = "${var.managed_image_storage_account_type}"
-  object_id                              = "${var.object_id}"
-  os_disk_size_gb                        = var.os_disk_size_gb
-  os_type                                = var.image_os_type
-  private_virtual_network_with_public_ip = "${var.private_virtual_network_with_public_ip}"
-  subscription_id                        = "${var.subscription_id}"
-  temp_resource_group_name               = "${var.temp_resource_group_name}"
-  tenant_id                              = "${var.tenant_id}"
-  virtual_network_name                   = "${var.virtual_network_name}"
-  virtual_network_resource_group_name    = "${var.virtual_network_resource_group_name}"
-  virtual_network_subnet_name            = "${var.virtual_network_subnet_name}"
-  vm_size                                = "${var.vm_size}"
-  winrm_insecure                         = "true"
-  winrm_use_ssl                          = "true"
-  winrm_username                         = "packer"
-  winrm_expiration_time                  = "1440h"
-  build_key_vault_name                   = var.build_key_vault_name
-  build_key_vault_secret_name            = var.build_key_vault_secret_name
-
-  shared_image_gallery_destination {
-    subscription                         = var.subscription_id
-    gallery_name                         = var.gallery_name
-    resource_group                       = var.gallery_resource_group_name
-    image_name                           = var.gallery_image_name
-    image_version                        = var.gallery_image_version
-    storage_account_type                 = var.gallery_storage_account_type
+  efi_config {
+    efi_storage_pool  = var.efi_storage
+    pre_enrolled_keys = true
+    efi_type          = "4m"
   }
 
-  dynamic "azure_tag" {
-    for_each = var.azure_tags
-    content {
-      name  = azure_tag.key
-      value = azure_tag.value
+  // BOOT MEDIA CONFIGURATION
+  boot_iso {
+    iso_file         = "${var.iso_storage}:iso/${var.windows_iso}"
+    iso_storage_pool = var.iso_storage
+    unmount          = true
+  }
+
+  additional_iso_files {
+    iso_file         = "${var.iso_storage}:iso/${var.virtio_win_iso}"
+    iso_storage_pool = var.iso_storage
+    unmount          = true
+    type             = "sata"
+    index            = 1
+  }
+
+  additional_iso_files {
+    cd_files = ["../scripts/build/Configure-RemotingForAnsible.ps1"]
+    cd_content = {
+      "autounattend.xml" = templatefile("../assets/base-image/unattend.pkrtpl", {
+        user               = var.install_user,
+        password           = var.install_password,
+        cdrom_drive        = var.cdrom_drive,
+        license_key        = var.license_key,
+        timezone           = var.timezone,
+        index              = var.image_index
+        virtio_cdrom_drive = var.virtio_cdrom_drive
+      })
     }
+    cd_label         = "Unattend"
+    iso_storage_pool = var.iso_storage
+    unmount          = true
+    type             = "sata"
+    index            = 0
   }
+
+  // VM TEMPLATE CONFIGURATION
+  template_name        = var.base_template_name
+  vm_name              = "win-instance-${formatdate("YYYYMMDD-hhmmss", timestamp())}"
+  template_description = "Windows 2022 Base Image\nCreated on: ${formatdate("EEE, DD MMM YYYY hh:mm:ss ZZZ", timestamp())}"
+  os                   = "win11"
+
+  // HARDWARE CONFIGURATION
+  memory          = var.memory
+  cores           = var.cores
+  sockets         = var.socket
+  cpu_type        = "host"
+  scsi_controller = "virtio-scsi-pci"
+  serials         = ["socket"]
+
+  // NETWORK CONFIGURATION
+  network_adapters {
+    model  = "virtio"
+    bridge = var.bridge
+  }
+
+  // STORAGE CONFIGURATION
+  disks {
+    storage_pool = var.disk_storage
+    type         = "scsi"
+    disk_size    = var.disk_size_gb
+    cache_mode   = "writeback"
+    format       = "raw"
+  }
+
+  // WINRM COMMUNICATION CONFIGURATION
+  communicator   = "winrm"
+  winrm_username = var.install_user
+  winrm_password = var.install_password
+  winrm_timeout  = "1h"
+  winrm_port     = "5986"
+  winrm_use_ssl  = true
+  winrm_insecure = true
+
+  // BOOT CONFIGURATION
+  boot         = "order=scsi0"
+  boot_wait    = "3s"
+  boot_command = ["<enter><enter>", "\\efi\\boot\\bootx64.efi<enter><wait>", "<enter>"]
 }
 
 build {
-  sources = ["source.azure-arm.image"]
+  name = "base"
+
+  sources = [
+    "source.proxmox-iso.base"
+  ]
+
+  provisioner "windows-restart" {
+  }
+
+  provisioner "windows-update" {
+    search_criteria = "IsInstalled=0"
+    filters = [
+      "exclude:$_.Title -like '*Preview*'",
+      "include:$true",
+    ]
+  }
+  provisioner "windows-restart" {
+    restart_timeout = "10m"
+  }
+
+  provisioner "powershell" {
+    script = "../scripts/build/Install-CloudBase.ps1"
+  }
+
+  provisioner "file" {
+    source      = "../assets/base-image/config/"
+    destination = "C://Program Files//Cloudbase Solutions//Cloudbase-Init//conf"
+  }
+
+  provisioner "powershell" {
+    inline = [
+      "Set-Service cloudbase-init -StartupType Manual",
+      "Stop-Service cloudbase-init -Force -Confirm:$false"
+    ]
+  }
+}
+
+source "proxmox-clone" "runner" {
+  // PROXMOX CONNECTION CONFIGURATION
+  proxmox_url              = var.proxmox_url
+  insecure_skip_tls_verify = true
+  username                 = var.proxmox_user
+  password                 = var.proxmox_password
+  node                     = var.node
+
+  // CLONE CONFIGURATION
+  clone_vm                = var.base_template_name
+  full_clone              = false
+  vm_name                 = "win-instance-${formatdate("YYYYMMDD-hhmmss", timestamp())}"
+  template_name           = var.runner_template_name
+  template_description    = "Windows VM cloned from base template\nCreated on: ${formatdate("EEE, DD MMM YYYY hh:mm:ss ZZZ", timestamp())}"
+  os                      = "win11"
+  cloud_init              = true
+  cloud_init_storage_pool = var.cloud_init_storage
+
+  // HARDWARE CONFIGURATION
+  memory          = var.memory
+  cores           = var.cores
+  sockets         = var.socket
+  cpu_type        = "host"
+  scsi_controller = "virtio-scsi-pci"
+
+
+  // NETWORK CONFIGURATION
+  network_adapters {
+    model  = "virtio"
+    bridge = var.bridge
+  }
+
+
+  // COMMUNICATION CONFIGURATION
+  communicator   = "winrm"
+  winrm_username = var.install_user
+  winrm_password = var.install_password
+  winrm_timeout  = "30m"
+  winrm_port     = "5986"
+  winrm_use_ssl  = true
+  winrm_insecure = true
+
+  disk {
+    size  = var.disk_extend_gb # set this to your desired larger size
+    type  = "scsi"             # or "virtio", "sata", "ide"
+    index = "0"                # this can be set if you want to control the device index
+  }
+
+}
+
+build {
+  name = "runner"
+
+  sources = [
+    "source.proxmox-clone.runner"
+  ]
 
   provisioner "powershell" {
     inline = [
@@ -268,7 +417,7 @@ build {
 
   provisioner "file" {
     destination = "${var.image_folder}\\"
-    sources     = [
+    sources = [
       "${path.root}/../assets",
       "${path.root}/../scripts",
       "${path.root}/../toolsets"
@@ -308,7 +457,7 @@ build {
     inline = ["if (-not ((net localgroup Administrators) -contains '${var.install_user}')) { exit 1 }"]
   }
 
-provisioner "powershell" {
+  provisioner "powershell" {
     elevated_password = "${var.install_password}"
     elevated_user     = "${var.install_user}"
     inline            = ["bcdedit.exe /set TESTSIGNING ON"]
@@ -317,7 +466,7 @@ provisioner "powershell" {
   provisioner "powershell" {
     environment_vars = ["IMAGE_VERSION=${var.image_version}", "IMAGE_OS=${var.image_os}", "AGENT_TOOLSDIRECTORY=${var.agent_tools_directory}", "IMAGEDATA_FILE=${var.imagedata_file}", "IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
     execution_policy = "unrestricted"
-    scripts          = [
+    scripts = [
       "${path.root}/../scripts/build/Configure-WindowsDefender.ps1",
       "${path.root}/../scripts/build/Configure-PowerShell.ps1",
       "${path.root}/../scripts/build/Install-PowerShellModules.ps1",
@@ -343,7 +492,7 @@ provisioner "powershell" {
 
   provisioner "powershell" {
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
-    scripts          = [
+    scripts = [
       "${path.root}/../scripts/build/Install-Docker.ps1",
       "${path.root}/../scripts/build/Install-DockerWinCred.ps1",
       "${path.root}/../scripts/build/Install-DockerCompose.ps1",
@@ -361,11 +510,11 @@ provisioner "powershell" {
     elevated_password = "${var.install_password}"
     elevated_user     = "${var.install_user}"
     environment_vars  = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
-    scripts           = [
+    scripts = [
       "${path.root}/../scripts/build/Install-VisualStudio.ps1",
       "${path.root}/../scripts/build/Install-KubernetesTools.ps1"
     ]
-    valid_exit_codes  = [0, 3010]
+    valid_exit_codes = [0, 3010]
   }
 
   provisioner "windows-restart" {
@@ -376,7 +525,7 @@ provisioner "powershell" {
   provisioner "powershell" {
     pause_before     = "2m0s"
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
-    scripts          = [
+    scripts = [
       "${path.root}/../scripts/build/Install-Wix.ps1",
       "${path.root}/../scripts/build/Install-VSExtensions.ps1",
       "${path.root}/../scripts/build/Install-AzureCli.ps1",
@@ -400,7 +549,7 @@ provisioner "powershell" {
 
   provisioner "powershell" {
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
-    scripts          = [
+    scripts = [
       "${path.root}/../scripts/build/Install-ActionsCache.ps1",
       "${path.root}/../scripts/build/Install-Ruby.ps1",
       "${path.root}/../scripts/build/Install-PyPy.ps1",
@@ -450,7 +599,7 @@ provisioner "powershell" {
     elevated_password = "${var.install_password}"
     elevated_user     = "${var.install_user}"
     environment_vars  = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
-    scripts           = [
+    scripts = [
       "${path.root}/../scripts/build/Install-PostgreSQL.ps1",
       "${path.root}/../scripts/build/Install-WindowsUpdates.ps1",
       "${path.root}/../scripts/build/Configure-DynamicPort.ps1",
@@ -470,7 +619,7 @@ provisioner "powershell" {
   provisioner "powershell" {
     pause_before     = "2m0s"
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
-    scripts          = [
+    scripts = [
       "${path.root}/../scripts/build/Install-WindowsUpdatesAfterReboot.ps1",
       "${path.root}/../scripts/build/Invoke-Cleanup.ps1",
       "${path.root}/../scripts/tests/RunAll-Tests.ps1"
@@ -504,12 +653,12 @@ provisioner "powershell" {
 
   provisioner "powershell" {
     environment_vars = ["INSTALL_USER=${var.install_user}"]
-    scripts          = [
+    scripts = [
       "${path.root}/../scripts/build/Install-NativeImages.ps1",
       "${path.root}/../scripts/build/Configure-System.ps1",
       "${path.root}/../scripts/build/Configure-User.ps1"
     ]
-    skip_clean       = true
+    skip_clean = true
   }
 
   provisioner "windows-restart" {
