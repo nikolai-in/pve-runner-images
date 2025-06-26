@@ -532,8 +532,8 @@ build {
     restart_timeout = "10m"
   }
 
-  // Install development tools, cloud CLI tools, and package managers
-  // Tests: Wix.Tests.ps1 (WiX Toolset), Vsix.Tests.ps1 (VS extensions), AzureCli.Tests.ps1 (Azure CLI), 
+  // Install development tools and package managers
+  // Tests: Wix.Tests.ps1 (WiX Toolset), Vsix.Tests.ps1 (VS extensions),
   //        ChocolateyPackages.Tests.ps1 (Chocolatey packages), JavaTools.Tests.ps1 (Java, Maven, Gradle), Kotlin.Tests.ps1 (Kotlin)
   provisioner "powershell" {
     pause_before     = "2m0s"
@@ -541,8 +541,6 @@ build {
     scripts = [
       "${path.root}/../scripts/build/Install-Wix.ps1",
       "${path.root}/../scripts/build/Install-VSExtensions.ps1",
-      "${path.root}/../scripts/build/Install-AzureCli.ps1",
-      "${path.root}/../scripts/build/Install-AzureDevOpsCli.ps1",
       "${path.root}/../scripts/build/Install-ChocolateyPackages.ps1",
       "${path.root}/../scripts/build/Install-JavaTools.ps1",
       "${path.root}/../scripts/build/Install-Kotlin.ps1",
@@ -550,26 +548,15 @@ build {
     ]
   }
 
-  // Install Service Fabric SDK with different execution policy
-  // Tests: ServiceFabricSDK.Tests.ps1 (verify Service Fabric SDK installation and tools)
-  provisioner "powershell" {
-    execution_policy = "remotesigned"
-    environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
-    scripts          = ["${path.root}/../scripts/build/Install-ServiceFabricSDK.ps1"]
-  }
 
-  // Restart after Service Fabric SDK installation
-  provisioner "windows-restart" {
-    restart_timeout = "10m"
-  }
 
   // Install programming languages, development frameworks, and web browsers
-  // Tests: Ruby.Tests.ps1 (Ruby, gems), Node.Tests.ps1 (Node.js, npm, yarn), AndroidSDK.Tests.ps1 (Android SDK), 
-  //        PowerShellAzModules.Tests.ps1 (Azure PowerShell modules), PipxPackages.Tests.ps1 (Python pipx packages),
-  //        Git.Tests.ps1 (Git, Git LFS), PHP.Tests.ps1 (PHP, Composer), Rust.Tests.ps1 (Rust, Cargo),
-  //        Browsers.Tests.ps1 (Chrome, Firefox), Selenium.Tests.ps1 (WebDriver), Apache.Tests.ps1 (Apache), Nginx.Tests.ps1 (Nginx),
-  //        MSYS2.Tests.ps1 (MSYS2 environment), WinAppDriver.Tests.ps1 (Windows Application Driver), R.Tests.ps1 (R language),
-  //        AWS.Tests.ps1 (AWS CLI/tools), DotnetSDK.Tests.ps1 (.NET SDK), Haskell.Tests.ps1 (Haskell, Stack),
+  // Tests: Ruby.Tests.ps1 (Ruby, gems), Node.Tests.ps1 (Node.js, npm, yarn), 
+  //        PipxPackages.Tests.ps1 (Python pipx packages), Git.Tests.ps1 (Git, Git LFS), PHP.Tests.ps1 (PHP, Composer), 
+  //        Rust.Tests.ps1 (Rust, Cargo), Browsers.Tests.ps1 (Chrome, Firefox), Selenium.Tests.ps1 (WebDriver), 
+  //        Apache.Tests.ps1 (Apache), Nginx.Tests.ps1 (Nginx), MSYS2.Tests.ps1 (MSYS2 environment), 
+  //        WinAppDriver.Tests.ps1 (Windows Application Driver), R.Tests.ps1 (R language),
+  //        DotnetSDK.Tests.ps1 (.NET SDK), Haskell.Tests.ps1 (Haskell, Stack),
   //        Miniconda.Tests.ps1 (Conda), Tools.Tests.ps1 (various development tools), MongoDB.Tests.ps1 (MongoDB)
   provisioner "powershell" {
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}", "TEMP_DIR=${var.temp_dir}"]
@@ -580,8 +567,6 @@ build {
       "${path.root}/../scripts/build/Install-Toolset.ps1",
       "${path.root}/../scripts/build/Configure-Toolset.ps1",
       "${path.root}/../scripts/build/Install-NodeJS.ps1",
-      "${path.root}/../scripts/build/Install-AndroidSDK.ps1",
-      "${path.root}/../scripts/build/Install-PowershellAzModules.ps1",
       "${path.root}/../scripts/build/Install-Pipx.ps1",
       "${path.root}/../scripts/build/Install-Git.ps1",
       "${path.root}/../scripts/build/Install-GitHub-CLI.ps1",
@@ -598,7 +583,6 @@ build {
       "${path.root}/../scripts/build/Install-Msys2.ps1",
       "${path.root}/../scripts/build/Install-WinAppDriver.ps1",
       "${path.root}/../scripts/build/Install-R.ps1",
-      "${path.root}/../scripts/build/Install-AWSTools.ps1",
       "${path.root}/../scripts/build/Install-DACFx.ps1",
       "${path.root}/../scripts/build/Install-MysqlCli.ps1",
       "${path.root}/../scripts/build/Install-SQLPowerShellTools.ps1",
@@ -608,7 +592,6 @@ build {
       "${path.root}/../scripts/build/Install-Haskell.ps1",
       "${path.root}/../scripts/build/Install-Stack.ps1",
       "${path.root}/../scripts/build/Install-Miniconda.ps1",
-      "${path.root}/../scripts/build/Install-AzureCosmosDbEmulator.ps1",
       "${path.root}/../scripts/build/Install-Zstd.ps1",
       "${path.root}/../scripts/build/Install-Vcpkg.ps1",
       "${path.root}/../scripts/build/Install-Bazel.ps1",

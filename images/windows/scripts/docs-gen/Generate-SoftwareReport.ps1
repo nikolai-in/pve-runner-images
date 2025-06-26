@@ -6,7 +6,6 @@ $global:ProgressPreference = "SilentlyContinue"
 $ErrorView = "NormalView"
 Set-StrictMode -Version Latest
 
-Import-Module (Join-Path $PSScriptRoot "SoftwareReport.Android.psm1") -DisableNameChecking
 Import-Module (Join-Path $PSScriptRoot "SoftwareReport.Browsers.psm1") -DisableNameChecking
 Import-Module (Join-Path $PSScriptRoot "SoftwareReport.CachedTools.psm1") -DisableNameChecking
 Import-Module (Join-Path $PSScriptRoot "SoftwareReport.Common.psm1") -DisableNameChecking
@@ -124,11 +123,6 @@ $cliTools = $installedSoftware.AddHeader("CLI Tools")
 if (-not (Test-IsWin25)) {
     $cliTools.AddToolVersion("Alibaba Cloud CLI", $(Get-AlibabaCLIVersion))
 }
-$cliTools.AddToolVersion("AWS CLI", $(Get-AWSCLIVersion))
-$cliTools.AddToolVersion("AWS SAM CLI", $(Get-AWSSAMVersion))
-$cliTools.AddToolVersion("AWS Session Manager CLI", $(Get-AWSSessionManagerVersion))
-$cliTools.AddToolVersion("Azure CLI", $(Get-AzureCLIVersion))
-$cliTools.AddToolVersion("Azure DevOps CLI extension", $(Get-AzureDevopsExtVersion))
 if (Test-IsWin19) {
     $cliTools.AddToolVersion("Cloud Foundry CLI", $(Get-CloudFoundryVersion))
 }
@@ -175,8 +169,7 @@ Note: MSYS2 is pre-installed on image but not added to PATH.
 $msys2.AddHeader("Notes").AddNote($notes)
 
 # BizTalk Server
-if (Test-IsWin19)
-{
+if (Test-IsWin19) {
     $installedSoftware.AddHeader("BizTalk Server").AddNode($(Get-BizTalkVersion))
 }
 
@@ -190,7 +183,6 @@ $databases.AddHeader("MongoDB").AddTable($(Get-MongoDBTable))
 
 # Database tools
 $databaseTools = $installedSoftware.AddHeader("Database tools")
-$databaseTools.AddToolVersion("Azure CosmosDb Emulator", $(Get-AzCosmosDBEmulatorVersion))
 $databaseTools.AddToolVersion("DacFx", $(Get-DacFxVersion))
 $databaseTools.AddToolVersion("MySQL", $(Get-MySQLVersion))
 $databaseTools.AddToolVersion("SQL OLEDB Driver", $(Get-SQLOLEDBDriverVersion))
@@ -236,12 +228,6 @@ $psTools.AddToolVersion("PowerShell", $(Get-PowershellCoreVersion))
 $psModules = $psTools.AddHeader("Powershell Modules")
 $psModules.AddNodes($(Get-PowerShellModules))
 
-
-# Android
-$android = $installedSoftware.AddHeader("Android")
-$android.AddTable($(Build-AndroidTable))
-
-$android.AddHeader("Environment variables").AddTable($(Build-AndroidEnvironmentTable))
 
 # Cached Docker images
 if (-not (Test-IsWin25)) {

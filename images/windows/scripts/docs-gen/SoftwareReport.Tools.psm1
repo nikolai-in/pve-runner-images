@@ -4,14 +4,6 @@ function Get-Aria2Version {
     return $aria2Version
 }
 
-function Get-AzCosmosDBEmulatorVersion {
-    $regKey = gci HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | gp | ? { $_.DisplayName -eq 'Azure Cosmos DB Emulator' }
-    $installDir = $regKey.InstallLocation
-    $exeFilePath = Join-Path $installDir 'CosmosDB.Emulator.exe'
-    $version = (Get-Item $exeFilePath).VersionInfo.FileVersion
-    return $version
-}
-
 function Get-BazelVersion {
     ((cmd /c "bazel --version 2>&1") | Out-String) -match "bazel (?<version>\d+\.\d+\.\d+)" | Out-Null
     $bazelVersion = $Matches.Version
@@ -144,7 +136,7 @@ function Get-OpenSSLVersion {
 }
 
 function Get-PackerVersion {
-    $packerVersion = (packer --version | Select-String "^Packer").Line.Replace('v','') | Get-StringPart -Part 1
+    $packerVersion = (packer --version | Select-String "^Packer").Line.Replace('v', '') | Get-StringPart -Part 1
     return $packerVersion
 }
 
@@ -192,35 +184,8 @@ function Get-ZstdVersion {
     return $zstdVersion
 }
 
-function Get-AzureCLIVersion {
-    $azureCLIVersion = $(az version) | ConvertFrom-Json | Foreach{ $_."azure-cli" }
-    return $azureCLIVersion
-}
-
 function Get-AzCopyVersion {
     return ($(azcopy --version) -replace "^azcopy version").Trim()
-}
-
-function Get-AzureDevopsExtVersion {
-    $azureDevExtVersion = (az version | ConvertFrom-Json | ForEach-Object { $_."extensions" })."azure-devops"
-    return $azureDevExtVersion
-}
-
-function Get-AWSCLIVersion {
-    $(aws --version) -match "aws-cli\/(?<version>\d+\.\d+\.\d+)" | Out-Null
-    $awscliVersion = $Matches.Version
-    return $awscliVersion
-}
-
-function Get-AWSSAMVersion {
-    $(sam --version) -match "version (?<version>\d+\.\d+\.\d+)" | Out-Null
-    $awssamVersion = $Matches.Version
-    return $awssamVersion
-}
-
-function Get-AWSSessionManagerVersion {
-    $awsSessionManagerVersion = $(session-manager-plugin --version)
-    return $awsSessionManagerVersion
 }
 
 function Get-AlibabaCLIVersion {
@@ -290,9 +255,9 @@ function Get-VisualCPPComponents {
             $arch = $matches["Arch"].ToLower()
             $version = $_.DisplayVersion
             [PSCustomObject]@{
-                Name = $name
+                Name         = $name
                 Architecture = $arch
-                Version = $version
+                Version      = $version
             }
         }
     }

@@ -1,23 +1,9 @@
-Describe "Azure Cosmos DB Emulator" {
-    $cosmosDbEmulatorRegKey = Get-ChildItem "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*" | Get-ItemProperty | Where-Object { $_.DisplayName -eq 'Azure Cosmos DB Emulator' }
-    $installDir = $cosmosDbEmulatorRegKey.InstallLocation
-
-    It "Azure Cosmos DB Emulator install location registry key exists" -TestCases @{installDir = $installDir} {
-        $installDir | Should -Not -BeNullOrEmpty
-    }
-
-    It "Azure Cosmos DB Emulator exe file exists" -TestCases @{installDir = $installDir} {
-        $exeFilePath = Join-Path $installDir 'CosmosDB.Emulator.exe'
-        $exeFilePath | Should -Exist
-    }
-}
-
 Describe "Bazel" {
     It "<ToolName>" -TestCases @(
         @{ ToolName = "bazel" }
         @{ ToolName = "bazelisk" }
     ) {
-        "$ToolName --version"| Should -ReturnZeroExitCode
+        "$ToolName --version" | Should -ReturnZeroExitCode
     }
 }
 
@@ -136,22 +122,6 @@ Describe "PowerShell Core" {
 Describe "Sbt" {
     It "sbt" {
         "sbt --version" | Should -ReturnZeroExitCode
-    }
-}
-
-Describe "ServiceFabricSDK" {
-    It "PowerShell Module" {
-        # Ignore PowerShell version check if running in PowerShell Core
-        # https://github.com/microsoft/service-fabric/issues/1343
-        if ($PSVersionTable.PSEdition -eq 'Core') {
-            Get-Module -Name ServiceFabric -SkipEditionCheck -ListAvailable | Should -Not -BeNullOrEmpty
-        } else {
-            Get-Module -Name ServiceFabric -ListAvailable | Should -Not -BeNullOrEmpty
-        }
-    }
-
-    It "ServiceFabricSDK version" {
-        Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Service Fabric\' -Name FabricVersion | Should -Not -BeNullOrEmpty
     }
 }
 
