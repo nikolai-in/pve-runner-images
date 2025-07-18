@@ -16,19 +16,13 @@
   "powershell.codeFormatting.whitespaceBeforeOpenParen": true,
   "powershell.codeFormatting.whitespaceBetweenParameters": true,
   "powershell.codeFormatting.whitespaceInsideBrace": true,
-  "shellcheck.exclude": [
-    "SC1090","SC2096"
-  ],
-  "shellcheck.customArgs": [
-    "-x"
-  ],
+  "shellcheck.exclude": ["SC1090", "SC2096"],
+  "shellcheck.customArgs": ["-x"],
   "json.schemas": [
     {
-        "fileMatch": [
-            "**/toolset-*.json"
-        ],
-        "url": "./schemas/toolset-schema.json"
+      "fileMatch": ["**/toolset-*.json"],
+      "url": "./schemas/toolset-schema.json"
     }
-]
-
+  ],
+  "conventionalCommits.scopes": ["windows"]
 }
