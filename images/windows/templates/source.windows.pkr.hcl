@@ -1,3 +1,16 @@
+packer {
+  required_plugins {
+    proxmox = {
+      version = "1.2.3"
+      source  = "github.com/nikolai-in/proxmox"
+    }
+    windows-update = {
+      version = "~> 0.16.10"
+      source  = "github.com/rgl/windows-update"
+    }
+  }
+}
+
 source "proxmox-iso" "base" {
 
   // PROXMOX CONNECTION CONFIGURATION

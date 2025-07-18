@@ -139,7 +139,11 @@ variable "image_folder" {
 }
 variable "image_os" {
   type    = string
-  default = ""
+  default = "win25"
+  validation {
+    condition     = contains(["win19", "win22", "win25"], var.image_os)
+    error_message = "The image_os value must be one of: win19, win22, win25."
+  }
 }
 variable "image_version" {
   type    = string
