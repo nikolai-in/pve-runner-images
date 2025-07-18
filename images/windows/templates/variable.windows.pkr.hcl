@@ -1,145 +1,130 @@
-// Authentication related variables
-variable "client_cert_path" {
-  type    = string
-  default = "${env("ARM_CLIENT_CERT_PATH")}"
-}
-variable "client_id" {
-  type    = string
-  default = "${env("ARM_CLIENT_ID")}"
-}
-variable "client_secret" {
-  type      = string
-  default   = "${env("ARM_CLIENT_SECRET")}"
-  sensitive = true
-}
-variable "object_id" {
-  type    = string
-  default = "${env("ARM_OBJECT_ID")}"
-}
-variable "oidc_request_token" {
-  type    = string
-  default = ""
-}
-variable "oidc_request_url" {
-  type    = string
-  default = ""
-}
-variable "subscription_id" {
-  type    = string
-  default = "${env("ARM_SUBSCRIPTION_ID")}"
-}
-variable "tenant_id" {
-  type    = string
-  default = "${env("ARM_TENANT_ID")}"
-}
-variable "use_azure_cli_auth" {
-  type    = bool
-  default = false
+// Proxmox related variables
+variable "proxmox_url" {
+  type        = string
+  description = "Proxmox Server URL"
 }
 
-// Azure environment related variables
-variable "allowed_inbound_ip_addresses" {
-  type    = list(string)
-  default = []
-}
-variable "azure_tags" {
-  type    = map(string)
-  default = {}
-}
-variable "build_key_vault_name" {
-  type    = string
-  default = "${env("BUILD_KEY_VAULT_NAME")}"
-}
-variable "build_key_vault_secret_name" {
-  type    = string
-  default = "${env("BUILD_KEY_VAULT_SECRET_NAME")}"
-}
-variable "build_resource_group_name" {
-  type    = string
-  default = "${env("BUILD_RG_NAME")}"
-}
-variable "gallery_image_name" {
-  type    = string
-  default = "${env("GALLERY_IMAGE_NAME")}"
-}
-variable "gallery_image_version" {
-  type    = string
-  default = "${env("GALLERY_IMAGE_VERSION")}"
-}
-variable "gallery_name" {
-  type    = string
-  default = "${env("GALLERY_NAME")}"
-}
-variable "gallery_resource_group_name" {
-  type    = string
-  default = "${env("GALLERY_RG_NAME")}"
-}
-variable "gallery_storage_account_type" {
-  type    = string
-  default = "${env("GALLERY_STORAGE_ACCOUNT_TYPE")}"
-}
-variable "image_os_type" {
-  type    = string
-  default = "Windows"
-}
-variable "location" {
-  type    = string
-  default = ""
-}
-variable "managed_image_name" {
-  type    = string
-  default = ""
-}
-variable "managed_image_resource_group_name" {
-  type    = string
-  default = "${env("ARM_RESOURCE_GROUP")}"
-}
-variable "managed_image_storage_account_type" {
-  type    = string
-  default = "Premium_LRS"
-}
-variable "private_virtual_network_with_public_ip" {
-  type    = bool
-  default = false
-}
-variable "os_disk_size_gb" {
-  type    = number
-  default = null
-}
-variable "source_image_version" {
-  type    = string
-  default = "latest"
-}
-variable "temp_resource_group_name" {
-  type    = string
-  default = "${env("TEMP_RESOURCE_GROUP_NAME")}"
-}
-variable "virtual_network_name" {
-  type    = string
-  default = "${env("VNET_NAME")}"
-}
-variable "virtual_network_resource_group_name" {
-  type    = string
-  default = "${env("VNET_RESOURCE_GROUP")}"
-}
-variable "virtual_network_subnet_name" {
-  type    = string
-  default = "${env("VNET_SUBNET")}"
-}
-variable "vm_size" {
-  type    = string
-  default = "Standard_F8s_v2"
-}
-variable "winrm_expiration_time" {  // A time duration with which to set the WinRM certificate to expire
-  type    = string                  // Also applies to key vault secret expiration time
-  default = "1440h"
-}
-variable "winrm_username" {         // The username used to connect to the VM via WinRM
-    type    = string                // Also applies to the username used to create the VM
-    default = "packer"
+variable "proxmox_insecure" {
+  type        = bool
+  description = "Allow insecure connections to Proxmox"
+  default     = false
 }
 
-// Image related variables
+variable "proxmox_user" {
+  type        = string
+  description = "Proxmox username"
+  sensitive   = true
+}
+
+variable "proxmox_password" {
+  type        = string
+  description = "Proxmox password"
+  sensitive   = true
+}
+
+variable "node" {
+  type        = string
+  description = "Proxmox cluster node"
+}
+
+variable "iso_storage" {
+  type        = string
+  description = "Proxmox storage location for iso files"
+  default     = "local"
+}
+
+variable "disk_storage" {
+  type        = string
+  description = "Disk storage location"
+  default     = "local-lvm"
+}
+
+variable "efi_storage" {
+  type        = string
+  description = "Location of EFI storage on proxmox host"
+  default     = "local-lvm"
+}
+
+variable "cloud_init_storage" {
+  type        = string
+  description = "Location of cloud-init files/iso/yaml config"
+  default     = "local-lvm"
+}
+
+// VM hardware related variables
+variable "memory" {
+  type        = number
+  description = "Amount of RAM in MB"
+  default     = 8192
+}
+
+variable "ballooning_minimum" {
+  type        = number
+  description = "Minimum amount of RAM in MB for ballooning"
+  default     = 2048
+}
+
+variable "cores" {
+  type        = number
+  description = "Amount of CPU cores"
+  default     = 2
+}
+
+variable "socket" {
+  type        = number
+  description = "Amount of CPU sockets"
+  default     = 1
+}
+
+variable "disk_size_gb" {
+  type        = string
+  description = "The size of the disk, including a unit suffix, such as 10G to indicate 10 gigabytes"
+  default     = "256G"
+}
+
+variable "bridge" {
+  type        = string
+  description = "Network bridge name"
+  default     = "vmbr0"
+}
+
+// Windows related variables
+
+variable "license_key" {
+  type        = string
+  description = "Windows license key, leave empty for evaluation version"
+  default     = ""
+  validation {
+    condition     = var.license_key == "" || can(regex("^([A-Za-z0-9]{5}-){4}[A-Za-z0-9]{5}$", var.license_key))
+    error_message = "The license_key must be either empty for evaluation version or in the format XXXXX-XXXXX-XXXXX-XXXXX-XXXXX."
+  }
+}
+
+variable "virtio_win_iso" {
+  type        = string
+  description = "Virtio-win ISO file"
+  default     = "virtio-win.iso"
+}
+
+variable "cdrom_drive" {
+  type        = string
+  description = "CD-ROM Drive letter for extra iso"
+  default     = "D:"
+}
+
+variable "virtio_cdrom_drive" {
+  type        = string
+  description = "CD-ROM Drive letter for virtio-win iso"
+  default     = "E:"
+}
+
+variable "timezone" {
+  type        = string
+  description = "Windows timezone"
+  default     = "UTC"
+}
+
+// Build scripts related variables
 variable "agent_tools_directory" {
   type    = string
   default = "C:\\hostedtoolcache\\windows"
@@ -171,7 +156,7 @@ variable "install_password" {
 }
 variable "install_user" {
   type    = string
-  default = "installer"
+  default = "runner"
 }
 variable "temp_dir" {
   type    = string
