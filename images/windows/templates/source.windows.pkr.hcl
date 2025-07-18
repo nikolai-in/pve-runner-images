@@ -119,7 +119,7 @@ source "proxmox-clone" "runner" {
   node                     = var.node
 
   // CLONE CONFIGURATION
-  clone_vm                = local.image_properties.template_name
+  clone_vm                = local.image_properties.from_template
   full_clone              = false
   vm_name                 = "win-instance-${formatdate("YYYYMMDD-hhmmss", timestamp())}"
   template_name           = "${local.image_properties.template_name}-runner"
