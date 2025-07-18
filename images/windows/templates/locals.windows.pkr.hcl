@@ -37,6 +37,7 @@ locals {
       windows_iso   = "en-us_windows_server_2025_eval_x64fre.iso"
       image_index   = "4"
       disk_size     = coalesce(var.disk_size_gb, "150G")
+      from_template = "Windows2025Base"
       template_name = "win25-runner"
       driver_paths = [
         for driver in local.driver_names : "${driver}\\${local.windows_driver_versions["win25"]}\\amd64"
