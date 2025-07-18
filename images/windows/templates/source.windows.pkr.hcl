@@ -128,6 +128,13 @@ source "proxmox-clone" "runner" {
   cloud_init              = true
   cloud_init_storage_pool = var.cloud_init_storage
 
+  // EFI & SECURE BOOT CONFIGURATION
+  efi_config {
+    efi_storage_pool  = var.efi_storage
+    pre_enrolled_keys = true
+    efi_type          = "4m"
+  }
+
   // HARDWARE CONFIGURATION
   memory          = var.memory
   cores           = var.cores
