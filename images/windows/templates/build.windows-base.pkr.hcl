@@ -21,12 +21,12 @@ build {
   }
 
   provisioner "powershell" {
-    script = "../scripts/build/Install-CloudBase.ps1"
+    script = "${path.root}/../scripts/build/Install-CloudBase.ps1"
   }
 
   provisioner "file" {
-    source      = "../assets/base-image/config/"
-    destination = "C:\\Program Files\\Cloudbase Solutions\\Cloudbase-Init\\conf"
+    source      = "${path.root}/../assets/base/config/"
+    destination = "C:/Program Files/Cloudbase Solutions/Cloudbase-Init/conf"
   }
 
   provisioner "powershell" {
