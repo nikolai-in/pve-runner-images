@@ -148,6 +148,33 @@ variable "image_folder" {
   type    = string
   default = "C:\\image"
 }
+variable "vm_ids" {
+  type = object({
+    win19_base   = number
+    win19_runner = number
+    win22_base   = number
+    win22_runner = number
+    win25_base   = number
+    win25_runner = number
+  })
+  description = "VM IDs for templates. Set to 0 for auto-assignment by Proxmox. VMIDs must be unique cluster-wide and in range 100-999999999."
+  default = {
+    win19_base   = 0
+    win19_runner = 0
+    win22_base   = 0
+    win22_runner = 0
+    win25_base   = 0
+    win25_runner = 0
+  }
+  validation {
+    condition = alltrue([
+      for vm_id in values(var.vm_ids) :
+      vm_id == 0 || (vm_id >= 100 && vm_id <= 999999999)
+    ])
+    error_message = "VM IDs must be between 100 and 999999999, or 0 for auto-assignment."
+  }
+}
+
 variable "image_os" {
   type    = string
   default = "win25"

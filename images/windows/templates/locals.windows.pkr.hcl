@@ -21,6 +21,8 @@ locals {
       disk_size       = coalesce(var.disk_size_gb, "256G")
       base_template   = "win19-base"
       runner_template = "win19-runner"
+      base_vm_id      = var.vm_ids.win19_base == 0 ? null : var.vm_ids.win19_base
+      runner_vm_id    = var.vm_ids.win19_runner == 0 ? null : var.vm_ids.win19_runner
       license_key     = var.license_keys.win19
       driver_paths = [
         for driver in local.driver_names : "${driver}\\${local.windows_driver_versions["win19"]}\\amd64"
@@ -32,6 +34,8 @@ locals {
       disk_size       = coalesce(var.disk_size_gb, "256G")
       base_template   = "win22-base"
       runner_template = "win22-runner"
+      base_vm_id      = var.vm_ids.win22_base == 0 ? null : var.vm_ids.win22_base
+      runner_vm_id    = var.vm_ids.win22_runner == 0 ? null : var.vm_ids.win22_runner
       license_key     = var.license_keys.win22
       driver_paths = [
         for driver in local.driver_names : "${driver}\\${local.windows_driver_versions["win22"]}\\amd64"
@@ -43,6 +47,8 @@ locals {
       disk_size       = coalesce(var.disk_size_gb, "150G")
       base_template   = "win25-base"
       runner_template = "win25-runner"
+      base_vm_id      = var.vm_ids.win25_base == 0 ? null : var.vm_ids.win25_base
+      runner_vm_id    = var.vm_ids.win25_runner == 0 ? null : var.vm_ids.win25_runner
       license_key     = var.license_keys.win25
       driver_paths = [
         for driver in local.driver_names : "${driver}\\${local.windows_driver_versions["win25"]}\\amd64"
