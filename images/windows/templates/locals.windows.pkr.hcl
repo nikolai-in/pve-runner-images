@@ -20,6 +20,7 @@ locals {
       image_index   = "4"
       disk_size     = coalesce(var.disk_size_gb, "256G")
       template_name = "win19-runner"
+      license_key   = var.license_keys.win19
       driver_paths = [
         for driver in local.driver_names : "${driver}\\${local.windows_driver_versions["win19"]}\\amd64"
       ]
@@ -29,6 +30,7 @@ locals {
       image_index   = "4"
       disk_size     = coalesce(var.disk_size_gb, "256G")
       template_name = "win22-runner"
+      license_key   = var.license_keys.win22
       driver_paths = [
         for driver in local.driver_names : "${driver}\\${local.windows_driver_versions["win22"]}\\amd64"
       ]
@@ -39,6 +41,7 @@ locals {
       disk_size     = coalesce(var.disk_size_gb, "150G")
       from_template = "Windows2025Base"
       template_name = "win25-runner"
+      license_key   = var.license_keys.win25
       driver_paths = [
         for driver in local.driver_names : "${driver}\\${local.windows_driver_versions["win25"]}\\amd64"
       ]
