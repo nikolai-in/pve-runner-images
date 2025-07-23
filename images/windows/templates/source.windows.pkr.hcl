@@ -46,7 +46,7 @@ source "proxmox-iso" "base" {
   }
 
   additional_iso_files {
-    cd_files = ["../scripts/build/Configure-RemotingForAnsible.ps1"]
+    cd_files = ["${path.root}/../scripts/build/Configure-RemotingForAnsible.ps1"]
     cd_content = {
       "autounattend.xml" = templatefile("../assets/base/unattend.pkrtpl", {
         user               = var.install_user,
@@ -67,7 +67,7 @@ source "proxmox-iso" "base" {
   }
 
   // VM TEMPLATE CONFIGURATION
-  template_name        = local.image_properties.template_name
+  template_name        = local.image_properties.base_template
   vm_name              = "win-instance-${formatdate("YYYYMMDD-hhmmss", timestamp())}"
   template_description = "Windows ${var.image_os} Base Image\nCreated on: ${formatdate("EEE, DD MMM YYYY hh:mm:ss ZZZ", timestamp())}"
   os                   = "win11"
@@ -119,10 +119,10 @@ source "proxmox-clone" "runner" {
   node                     = var.node
 
   // CLONE CONFIGURATION
-  clone_vm                = local.image_properties.from_template
+  clone_vm                = local.image_properties.base_template
   full_clone              = false
   vm_name                 = "win-instance-${formatdate("YYYYMMDD-hhmmss", timestamp())}"
-  template_name           = "${local.image_properties.template_name}-runner"
+  template_name           = local.image_properties.runner_template
   template_description    = "Windows ${var.image_os} Runner VM cloned from base template\nCreated on: ${formatdate("EEE, DD MMM YYYY hh:mm:ss ZZZ", timestamp())}"
   os                      = "win11"
   cloud_init              = true

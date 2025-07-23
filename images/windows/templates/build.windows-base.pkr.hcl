@@ -1,5 +1,5 @@
 build {
-  name = "base"
+  name = "${var.image_os}-base"
 
   sources = [
     "source.proxmox-iso.base",
