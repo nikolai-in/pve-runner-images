@@ -38,5 +38,16 @@ license_keys = {
   win25 = "" # "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
 }
 
+# VM IDs for templates (optional - set to 0 for auto-assignment)
+# VMIDs must be unique cluster-wide and in range 100-999999999
+vm_ids = {
+  win19_base   = 0 # 1019  # Example: assign specific VM ID
+  win19_runner = 0 # 2019  # Example: assign specific VM ID
+  win22_base   = 0 # 1022  # Example: assign specific VM ID
+  win22_runner = 0 # 2022  # Example: assign specific VM ID
+  win25_base   = 0 # 1025  # Example: assign specific VM ID
+  win25_runner = 0 # 2025  # Example: assign specific VM ID
+}
+
 # ISO files (ensure these exist in your Proxmox ISO storage)
 virtio_win_iso = "virtio-win.iso"

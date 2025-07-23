@@ -68,6 +68,7 @@ source "proxmox-iso" "base" {
 
   // VM TEMPLATE CONFIGURATION
   template_name        = local.image_properties.base_template
+  vm_id                = local.image_properties.base_vm_id
   vm_name              = "win-instance-${formatdate("YYYYMMDD-hhmmss", timestamp())}"
   template_description = "Windows ${var.image_os} Base Image\nCreated on: ${formatdate("EEE, DD MMM YYYY hh:mm:ss ZZZ", timestamp())}"
   os                   = "win11"
@@ -121,6 +122,7 @@ source "proxmox-clone" "runner" {
   // CLONE CONFIGURATION
   clone_vm                = local.image_properties.base_template
   full_clone              = false
+  vm_id                   = local.image_properties.runner_vm_id
   vm_name                 = "win-instance-${formatdate("YYYYMMDD-hhmmss", timestamp())}"
   template_name           = local.image_properties.runner_template
   template_description    = "Windows ${var.image_os} Runner VM cloned from base template\nCreated on: ${formatdate("EEE, DD MMM YYYY hh:mm:ss ZZZ", timestamp())}"
