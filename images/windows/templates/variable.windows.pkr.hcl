@@ -90,13 +90,24 @@ variable "bridge" {
 
 // Windows related variables
 
-variable "license_key" {
-  type        = string
-  description = "Windows license key, leave empty for evaluation version"
-  default     = ""
+variable "license_keys" {
+  type = object({
+    win19 = string
+    win22 = string
+    win25 = string
+  })
+  description = "Windows license keys for different versions. Leave empty for evaluation versions."
+  default = {
+    win19 = ""
+    win22 = ""
+    win25 = ""
+  }
   validation {
-    condition     = var.license_key == "" || can(regex("^([A-Za-z0-9]{5}-){4}[A-Za-z0-9]{5}$", var.license_key))
-    error_message = "The license_key must be either empty for evaluation version or in the format XXXXX-XXXXX-XXXXX-XXXXX-XXXXX."
+    condition = alltrue([
+      for version, key in var.license_keys :
+      key == "" || can(regex("^([A-Za-z0-9]{5}-){4}[A-Za-z0-9]{5}$", key))
+    ])
+    error_message = "Each license key must be either empty for evaluation version or in the format XXXXX-XXXXX-XXXXX-XXXXX-XXXXX."
   }
 }
 

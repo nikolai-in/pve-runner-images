@@ -52,7 +52,7 @@ source "proxmox-iso" "base" {
         user               = var.install_user,
         password           = var.install_password,
         cdrom_drive        = var.cdrom_drive,
-        license_key        = var.license_key,
+        license_key        = local.image_properties.license_key,
         timezone           = var.timezone,
         index              = local.image_properties.image_index
         virtio_cdrom_drive = var.virtio_cdrom_drive
