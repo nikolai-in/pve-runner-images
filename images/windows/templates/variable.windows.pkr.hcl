@@ -197,8 +197,9 @@ variable "install_password" {
   sensitive = true
 }
 variable "install_user" {
-  type    = string
-  default = "runner"
+  type        = string
+  default     = "Administrator"
+  description = "Username for logging into Windows during and after image build. Use 'Administrator' for the built-in admin account."
 }
 variable "temp_dir" {
   type    = string
