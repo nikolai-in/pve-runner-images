@@ -22,7 +22,7 @@ socket = 1
 bridge = "vnet0"
 
 # Windows settings
-install_user     = "runner"
+install_user     = "Administrator"
 install_password = "YourSecurePassword123!"
 timezone         = "UTC"
 
