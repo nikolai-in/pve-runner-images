@@ -335,34 +335,107 @@ function Format-AsMarkdown {
     $totalSize = [Math]::Round(($Status | Where-Object {$_.Cached} | Measure-Object -Property SizeMB -Sum).Sum, 2)
     $coverage = [Math]::Round(($cachedCount/$totalUrls)*100, 1)
     
+    # Cacheability breakdown
+    $cacheable = ($Status | Where-Object {$_.Cacheability -eq "Cacheable"}).Count
+    $toolsetDefined = ($Status | Where-Object {$_.Cacheability -eq "Toolset-Defined"}).Count
+    $redirects = ($Status | Where-Object {$_.Cacheability -eq "Redirect"}).Count
+    $dynamic = ($Status | Where-Object {$_.Cacheability -eq "Dynamic-Content"}).Count
+    
     # Build markdown as array of lines
     $lines = @()
-    $lines += "# Cache Status Report"
+    $lines += "# 📦 Cache Status Report"
     $lines += ""
-    $lines += "**Cache Location:** $CacheLocation"
-    $lines += "**Platform:** $Platform"
-    $lines += "**Generated:** $(Get-Date)"
+    $lines += "**🗂️ Cache Location:** ``$CacheLocation``  "
+    $lines += "**🖥️ Platform:** $Platform | **📅 Generated:** $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
     $lines += ""
-    $lines += "## Summary"
+    
+    # Enhanced visual summary with better grouping
+    $lines += "## 📊 Summary"
     $lines += ""
-    $lines += "| Metric | Value |"
-    $lines += "| ------ | ----- |"
-    $lines += "| Total URLs | $totalUrls |"
-    $lines += "| Cached | $cachedCount |"
-    $lines += "| Missing | $missingCount |"
-    $lines += "| With Variables | $variableCount |"
-    $lines += "| Total Size | $totalSize MB |"
-    $lines += "| Coverage | $coverage% |"
+    
+    # Status indicators based on coverage
+    $statusIcon = if ($coverage -eq 0) { "🔴" } elseif ($coverage -lt 25) { "🟡" } elseif ($coverage -lt 75) { "🟠" } else { "🟢" }
+    $statusText = if ($coverage -eq 0) { "Not Started" } elseif ($coverage -lt 25) { "Getting Started" } elseif ($coverage -lt 75) { "In Progress" } else { "Well Cached" }
+    
+    $lines += "### $statusIcon Cache Status: **$statusText** ($coverage% Coverage)"
     $lines += ""
-    $lines += "## Detailed Status"
+    
+    # Main metrics in a clean card format
+    $lines += "| **📈 Coverage** | **🔢 Total URLs** | **✅ Cached** | **❌ Missing** |"
+    $lines += "| :-------------: | :---------------: | :-----------: | :------------: |"
+    $lines += "| **$coverage%** | $totalUrls | $cachedCount | $missingCount |"
     $lines += ""
-    $lines += "| Status | Type | Size (MB) | Source | URL |"
-    $lines += "| ------ | ---- | --------- | ------ | --- |"
+    
+    # Secondary metrics
+    $lines += "| **🔄 Variable** | **💾 Cache Size** | **🎯 Cacheable** | **📋 Toolset** |"
+    $lines += "| :-------------: | :---------------: | :--------------: | :------------: |"
+    $lines += "| $variableCount | $totalSize MB | $cacheable | $toolsetDefined |"
+    $lines += ""
+    
+    # Additional breakdown
+    $lines += "| **🔗 Redirects** | **🌐 Dynamic** |"
+    $lines += "| :--------------: | :------------: |"
+    $lines += "| $redirects | $dynamic |"
+    $lines += ""
+    
+    # Enhanced mermaid pie chart with vibrant custom colors
+    $lines += "## 🎨 Cacheability Breakdown"
+    $lines += ""
+    $lines += '```mermaid'
+    $lines += '%%{init: {"pie": {"textPosition": 0.5}, "themeVariables": {"pieOuterStrokeWidth": "5px", "pie1": "#22c55e", "pie2": "#f59e0b", "pie3": "#3b82f6", "pie4": "#8b5cf6", "pie5": "#ef4444", "pieLegendTextSize": "18px"}} }%%'
+    $lines += 'pie'
+    $lines += "    `"Directly Cacheable`" : $cacheable"
+    $lines += "    `"Variable URLs`" : $variableCount"
+    $lines += "    `"Redirects`" : $redirects"
+    $lines += "    `"Toolset Defined`" : $toolsetDefined"
+    $lines += "    `"Dynamic Content`" : $dynamic"
+    $lines += '```'
+    $lines += ""
+    $lines += "**Legend:** 🎯 Directly Cacheable (Green) | 🔄 Variable URLs (Amber) | 🔗 Redirects (Blue) | 📋 Toolset Defined (Purple) | 🌐 Dynamic Content (Red)"
+    $lines += ""
+    
+    # Enhanced detailed table with tool names
+    $lines += "## 📋 Detailed Status"
+    $lines += ""
+    $lines += "| Tool | Status | Type | Size | Source | URL |"
+    $lines += "| ---- | ------ | ---- | ---- | ------ | --- |"
     
     foreach ($item in $Status | Sort-Object Status, Type, Source) {
-        $size = if ($item.SizeMB -gt 0) { [Math]::Round($item.SizeMB, 2) } else { "-" }
+        # Extract tool name from source or URL
+        $toolName = ""
+        if ($item.Source -match "Script:Install-(.+?)\.ps1") {
+            $toolName = $matches[1]
+        } elseif ($item.Source -match "Toolset:toolcache\.(.+)") {
+            $toolName = $matches[1] + " (toolcache)"
+        } elseif ($item.Source -match "Script:Configure-(.+?)\.ps1") {
+            $toolName = $matches[1] + " (config)"
+        } elseif ($item.Url -match "github\.com/([^/]+/[^/]+)") {
+            $toolName = $matches[1] -replace ".*/", ""
+        } elseif ($item.Url -match "([a-zA-Z]+)\.(?:org|com|net)") {
+            $toolName = $matches[1]
+        } else {
+            $toolName = ($item.Source -split ":" | Select-Object -Last 1) -replace "\.ps1", ""
+        }
+        
+        # Status with emoji
+        $statusEmoji = switch ($item.Status) {
+            "Cached" { "✅" }
+            "Missing" { 
+                switch ($item.Cacheability) {
+                    "Cacheable" { "❌" }
+                    "Variable" { "🔄" }
+                    "Redirect" { "🔗" }
+                    "Dynamic-Content" { "🌐" }
+                    "Toolset-Defined" { "📋" }
+                    default { "❓" }
+                }
+            }
+            default { "❓" }
+        }
+        
+        $size = if ($item.SizeMB -gt 0) { [Math]::Round($item.SizeMB, 2) + " MB" } else { "-" }
         $url = if ($item.Url.Length -gt 80) { $item.Url.Substring(0, 77) + "..." } else { $item.Url }
-        $lines += "| $($item.Status) | $($item.Type) | $size | $($item.Source) | ``$url`` |"
+        $lines += "| $toolName | $statusEmoji $($item.Status) | $($item.Type) | $size | $($item.Source) | ``$url`` |"
     }
     
     return ($lines -join "`n")
