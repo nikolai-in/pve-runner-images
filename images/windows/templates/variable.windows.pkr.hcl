@@ -201,6 +201,14 @@ variable "install_user" {
   default     = "Administrator"
   description = "Username for logging into winrm and autologon during and after image build. Use 'Administrator' for the built-in admin account."
 }
+
+// Debugging related variables
+variable "winrm_host" {
+  type        = string
+  description = "IP address or hostname for WinRM debugging connection. Required when using *.winrm sources for testing provisioners on existing VMs."
+  default     = null
+}
+
 variable "temp_dir" {
   type    = string
   default = "D:\\temp"

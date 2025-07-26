@@ -1,6 +1,14 @@
+// Windows Server 2019 Build Configuration
+// 
+// Normal build: packer build -only="windows-2019.runner" .
+// Debug build:  packer build -only="windows-2019.winrm" -var="winrm_host=IP" .
+
 build {
-  sources = ["source.proxmox-clone.runner"]
-  name    = "windows-2019"
+  sources = [
+    "source.proxmox-clone.runner",
+    "source.null.winrm"
+  ]
+  name = "windows-2019"
 
   provisioner "powershell" {
     inline = [

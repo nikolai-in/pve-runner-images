@@ -170,3 +170,28 @@ source "proxmox-clone" "runner" {
     format       = "raw"
   }
 }
+
+source "null" "winrm" {
+  // DEBUG SOURCE - Connect to existing Windows VM via WinRM for rapid provisioner testing
+  // 
+  // This source allows you to test provisioners on an existing VM without rebuilding.
+  // To use this source instead of the default Proxmox sources, use Packer's -only flag:
+  //
+  // Examples:
+  // packer build -only="*.winrm" -var="winrm_host=192.168.1.100" .
+  // packer build -only="windows-2025.winrm" -var="winrm_host=my-test-vm" .
+  //
+  // Prerequisites:
+  // - Existing Windows VM with WinRM enabled on port 5986 (SSL)
+  // - Same credentials as specified in install_user/install_password variables
+  // - VM should be in a clean state for repeatable testing
+
+  communicator   = "winrm"
+  winrm_username = var.install_user
+  winrm_password = var.install_password
+  winrm_timeout  = "30m"
+  winrm_port     = "5986"
+  winrm_use_ssl  = true
+  winrm_insecure = true
+  winrm_host     = var.winrm_host
+}
