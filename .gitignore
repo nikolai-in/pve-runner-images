@@ -37,6 +37,10 @@ bld/
 *.VisualState.xml
 TestResult.xml
 
+# Pester test results
+*TestResults.xml
+**/*Tests.xml
+
 # Build Results of an ATL Project
 [Dd]ebugPS/
 [Rr]eleasePS/
