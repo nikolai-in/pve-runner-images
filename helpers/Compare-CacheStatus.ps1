@@ -1,9 +1,11 @@
 ################################################################################
 ##  File:  Compare-CacheStatus.ps1
-##  Desc:  Compare expected toolset URLs vs cached files status
-##  Usage: .\Compare-CacheStatus.ps1 [-CacheLocation "P:\Cache"] [-OutputFormat "Table"]
-##  Note:  Generates comparison report of cache coverage
+##  Desc:  Compare expected toolset URLs vs cached files status using proper SoftwareReport
+##  Usage: .\Compare-CacheStatus.ps1 [-CacheLocation "P:\Cache"] [-OutputFormat "Table"] [-AnalyzeReadmes]
+##  Note:  Leverages existing SoftwareReport infrastructure for README analysis
 ################################################################################
+
+using module ./software-report-base/SoftwareReport.psm1
 
 [CmdletBinding()]
 param(
@@ -19,7 +21,10 @@ param(
     [string]$OutputFormat = "Markdown",
     
     [Parameter(Mandatory = $false)]
-    [string]$OutputFile = "README-CACHE.md"
+    [string]$OutputFile = "README-CACHE.md",
+    
+    [Parameter(Mandatory = $false)]
+    [switch]$AnalyzeReadmes
 )
 
 $ErrorActionPreference = "Stop"
@@ -325,7 +330,10 @@ function Format-AsTable {
 }
 
 function Format-AsMarkdown {
-    param([array]$Status)
+    param(
+        [array]$Status,
+        [object]$CachedToolsAnalysis = $null
+    )
     
     # Calculate summary metrics
     $totalUrls = $Status.Count
@@ -433,12 +441,150 @@ function Format-AsMarkdown {
             default { "❓" }
         }
         
-        $size = if ($item.SizeMB -gt 0) { [Math]::Round($item.SizeMB, 2) + " MB" } else { "-" }
+        $size = if ($item.SizeMB -gt 0) { "$([Math]::Round($item.SizeMB, 2)) MB" } else { "-" }
         $url = if ($item.Url.Length -gt 80) { $item.Url.Substring(0, 77) + "..." } else { $item.Url }
         $lines += "| $toolName | $statusEmoji $($item.Status) | $($item.Type) | $size | $($item.Source) | ``$url`` |"
     }
     
+    # Add README analysis section if provided
+    if ($ReadmeAnalysis -and $ReadmeAnalysis.ReadmeFiles.Count -gt 0) {
+        $lines += ""
+        $lines += "## 📋 README Analysis"
+        $lines += ""
+        $lines += "Comparing cache expectations vs actual installed software from generated README files:"
+        $lines += ""
+        
+        foreach ($readme in $ReadmeAnalysis.ReadmeFiles) {
+            $lines += "### $($readme.Platform) (v$($readme.ImageVersion))"
+            $lines += ""
+            
+            # Cached tools found using proper parsing
+            $hasCachedTools = $false
+            if ($readme.GoVersions -and $readme.GoVersions.Count -gt 0) {
+                if (-not $hasCachedTools) {
+                    $lines += "#### 🔧 Cached Tools Found"
+                    $lines += ""
+                    $hasCachedTools = $true
+                }
+                $lines += "- **Go**: $($readme.GoVersions -join ', ')"
+            }
+            
+            if ($readme.NodeVersions -and $readme.NodeVersions.Count -gt 0) {
+                if (-not $hasCachedTools) {
+                    $lines += "#### 🔧 Cached Tools Found"
+                    $lines += ""
+                    $hasCachedTools = $true
+                }
+                $lines += "- **Node.js**: $($readme.NodeVersions -join ', ')"
+            }
+            
+            if ($readme.PythonVersions -and $readme.PythonVersions.Count -gt 0) {
+                if (-not $hasCachedTools) {
+                    $lines += "#### 🔧 Cached Tools Found"
+                    $lines += ""
+                    $hasCachedTools = $true
+                }
+                $lines += "- **Python**: $($readme.PythonVersions -join ', ')"
+            }
+            
+            if ($readme.RubyVersions -and $readme.RubyVersions.Count -gt 0) {
+                if (-not $hasCachedTools) {
+                    $lines += "#### � Cached Tools Found"
+                    $lines += ""
+                    $hasCachedTools = $true
+                }
+                $lines += "- **Ruby**: $($readme.RubyVersions -join ', ')"
+            }
+            
+            if ($hasCachedTools) {
+                $lines += ""
+            }
+            
+            # Cross-reference with our cache expectations
+            $lines += "#### 🎯 Cache vs Reality Analysis"
+            $lines += ""
+            
+            # Check Go versions against toolcache URLs
+            $goUrls = $Status | Where-Object { $_.Source -match "toolcache\.go" }
+            if ($goUrls -and $readme.GoVersions) {
+                $lines += "- **Go Cache Coverage**: Found $($readme.GoVersions.Count) cached versions, $($goUrls.Count) toolcache URLs expected"
+            }
+            
+            # Check Node versions
+            $nodeUrls = $Status | Where-Object { $_.Source -match "toolcache\.node" }
+            if ($nodeUrls -and $readme.NodeVersions) {
+                $lines += "- **Node.js Cache Coverage**: Found $($readme.NodeVersions.Count) cached versions, $($nodeUrls.Count) toolcache URLs expected"
+            }
+            
+            # Check Python versions
+            $pythonUrls = $Status | Where-Object { $_.Source -match "toolcache\.Python" }
+            if ($pythonUrls -and $readme.PythonVersions) {
+                $lines += "- **Python Cache Coverage**: Found $($readme.PythonVersions.Count) cached versions, $($pythonUrls.Count) toolcache URLs expected"
+            }
+            
+            $lines += ""
+        }
+    }
+    
     return ($lines -join "`n")
+}
+
+function Get-CachedToolsAnalysis {
+    param(
+        [string]$Platform
+    )
+    
+    Write-Host "Analyzing cached tools using proper infrastructure..." -ForegroundColor Cyan
+    
+    # Try to use the existing cached tools module if available
+    $platformPath = Join-Path $repoRoot "images" $Platform
+    $cachedToolsModulePath = Join-Path $platformPath "scripts\docs-gen\SoftwareReport.CachedTools.psm1"
+    
+    $analysis = @{
+        CachedToolsAvailable = $false
+        CachedTools = @{}
+        Error = $null
+    }
+    
+    if (Test-Path $cachedToolsModulePath) {
+        try {
+            # Import the cached tools module
+            Import-Module $cachedToolsModulePath -Force -DisableNameChecking
+            
+            # Get cached tool versions using the proper functions
+            if (Get-Command "Get-ToolcacheGoVersions" -ErrorAction SilentlyContinue) {
+                $analysis.CachedTools.Go = Get-ToolcacheGoVersions
+            }
+            
+            if (Get-Command "Get-ToolcacheNodeVersions" -ErrorAction SilentlyContinue) {
+                $analysis.CachedTools.Node = Get-ToolcacheNodeVersions
+            }
+            
+            if (Get-Command "Get-ToolcachePythonVersions" -ErrorAction SilentlyContinue) {
+                $analysis.CachedTools.Python = Get-ToolcachePythonVersions
+            }
+            
+            if (Get-Command "Get-ToolcacheRubyVersions" -ErrorAction SilentlyContinue) {
+                $analysis.CachedTools.Ruby = Get-ToolcacheRubyVersions
+            }
+            
+            if (Get-Command "Get-ToolcachePyPyVersions" -ErrorAction SilentlyContinue) {
+                $analysis.CachedTools.PyPy = Get-ToolcachePyPyVersions
+            }
+            
+            $analysis.CachedToolsAvailable = $true
+            Write-Host "Successfully loaded cached tools data" -ForegroundColor Green
+        }
+        catch {
+            $analysis.Error = $_.Exception.Message
+            Write-Warning "Failed to load cached tools module: $($_.Exception.Message)"
+        }
+    } else {
+        $analysis.Error = "CachedTools module not found at $cachedToolsModulePath"
+        Write-Warning "CachedTools module not found"
+    }
+    
+    return $analysis
 }
 
 #endregion
@@ -451,6 +597,13 @@ Write-Host "Analyzing cache status..." -ForegroundColor Yellow
 $expectedUrls = Get-ExpectedUrls -Platform $Platform
 Write-Host "Found $($expectedUrls.Count) expected URLs" -ForegroundColor Cyan
 
+# Analyze cached tools if requested (using proper infrastructure)
+$cachedToolsAnalysis = $null
+if ($AnalyzeReadmes) {
+    Write-Host "Analyzing cached tools using proper infrastructure..." -ForegroundColor Yellow
+    $cachedToolsAnalysis = Get-CachedToolsAnalysis -Platform $Platform
+}
+
 # Check cache status
 $cacheStatus = Get-CacheStatus -CacheLocation $CacheLocation -ExpectedUrls $expectedUrls
 
@@ -460,7 +613,7 @@ switch ($OutputFormat) {
         Format-AsTable -Status $cacheStatus
     }
     "Markdown" {
-        $markdown = Format-AsMarkdown -Status $cacheStatus
+        $markdown = Format-AsMarkdown -Status $cacheStatus -CachedToolsAnalysis $cachedToolsAnalysis
         if ($OutputFile) {
             Set-Content -Path $OutputFile -Value $markdown -Encoding UTF8
             Write-Host "`nMarkdown report saved to: $OutputFile" -ForegroundColor Green
