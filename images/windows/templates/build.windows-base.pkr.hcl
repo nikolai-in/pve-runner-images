@@ -1,8 +1,14 @@
+// Windows Base Image Build Configuration
+// 
+// Normal build: packer build -only="${var.image_os}-base.base" .
+// Debug build:  packer build -only="${var.image_os}-base.winrm" -var="winrm_host=IP" .
+
 build {
   name = "${var.image_os}-base"
 
   sources = [
     "source.proxmox-iso.base",
+    "source.null.winrm",
   ]
 
   provisioner "windows-restart" {

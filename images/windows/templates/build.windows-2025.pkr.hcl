@@ -1,6 +1,14 @@
+// Windows Server 2025 Build Configuration
+// 
+// Normal build: packer build -only="windows-2025.runner" .
+// Debug build:  packer build -only="windows-2025.winrm" -var="winrm_host=IP" .
+
 build {
-  sources = ["source.proxmox-clone.runner"]
-  name    = "windows-2025"
+  sources = [
+    "source.proxmox-clone.runner",
+    "source.null.winrm"
+  ]
+  name = "windows-2025"
 
   provisioner "powershell" {
     inline = [
