@@ -14,12 +14,8 @@ build {
   provisioner "windows-restart" {
   }
 
-  provisioner "windows-update" {
-    search_criteria = "IsInstalled=0"
-    filters = [
-      "exclude:$_.Title -like '*Preview*'",
-      "include:$true",
-    ]
+  provisioner "powershell" {
+    script = "${path.root}/../scripts/build/Install-BaseWindowsUpdates.ps1"
   }
 
   provisioner "windows-restart" {
