@@ -404,3 +404,7 @@ images/*/*-temp.json
 
 # Ignore packer variables file
 variables.auto.pkrvars.hcl
+
+# Cache status reports
+cache-status-report.*
+README-CACHE.md

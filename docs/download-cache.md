@@ -34,6 +34,16 @@ The system works in two simple steps:
 & .\scripts\build\Install-Docker.ps1
 ```
 
+### 3. Check Cache Status
+
+```powershell
+# Show cache coverage and status in table format
+.\helpers\Compare-CacheStatus.ps1 -CacheLocation "D:\BuildCache"
+
+# Generate markdown report
+.\helpers\Compare-CacheStatus.ps1 -CacheLocation "D:\BuildCache" -OutputFormat Markdown -OutputFile "cache-report.md"
+```
+
 ## Architecture
 
 ### Cache Structure
