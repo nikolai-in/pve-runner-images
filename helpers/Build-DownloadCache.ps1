@@ -49,6 +49,24 @@ Write-Host "=== Build Download Cache for $Platform ===" -ForegroundColor Green
 Write-Host "Cache Location: $CacheLocation"
 Write-Host "Platform Path: $platformPath"
 
+# Always use enhanced intelligent URL discovery for maximum cache coverage
+Write-Host "🤖 Using intelligent URL discovery..." -ForegroundColor Cyan
+
+# Run enhanced discovery
+$urlScript = Join-Path $scriptRoot "Get-CacheUrls.ps1"
+if (Test-Path $urlScript) {
+    & $urlScript -Platform $Platform
+    
+    # Load enhanced manifest
+    $enhancedManifestPath = Join-Path $scriptRoot "enhanced-cache-manifest.json"
+    if (Test-Path $enhancedManifestPath) {
+        $enhancedManifest = Get-Content $enhancedManifestPath | ConvertFrom-Json
+        Write-Host "✅ Loaded $($enhancedManifest.TotalUrls) URLs" -ForegroundColor Green
+    }
+} else {
+    Write-Warning "URL discovery script not found. Using basic discovery."
+}
+
 # Ensure cache directory exists
 if (-not $WhatIf) {
     New-Item -ItemType Directory -Path $CacheLocation -Force | Out-Null

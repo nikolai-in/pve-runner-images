@@ -408,3 +408,6 @@ variables.auto.pkrvars.hcl
 # Cache status reports
 cache-status-report.*
 README-CACHE.md
+
+# Generated cache manifests
+enhanced-cache-manifest.json

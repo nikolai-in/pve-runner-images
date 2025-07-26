@@ -47,185 +47,21 @@ function Get-ExpectedUrls {
         [string]$Platform
     )
     
-    $platformPath = Join-Path $repoRoot "images" $Platform
-    $scriptsPath = Join-Path $platformPath "scripts"
-    $toolsetsPath = Join-Path $platformPath "toolsets"
-    
-    $expectedUrls = [System.Collections.ArrayList]::new()
-    
-    # Get from toolset JSON - focus on items with actual URLs
-    $toolsetFiles = Get-ChildItem $toolsetsPath -Name "toolset-*.json" | Sort-Object -Descending
-    if ($toolsetFiles) {
-        $toolsetVersion = ($toolsetFiles[0] -replace 'toolset-|\.json', '')
-        $toolsetFile = Join-Path $toolsetsPath "toolset-$toolsetVersion.json"
-        
-        if (Test-Path $toolsetFile) {
-            Write-Verbose "Parsing toolset file: $toolsetFile"
-            $toolset = Get-Content $toolsetFile | ConvertFrom-Json
-            
-            # Parse toolcache section (contains manifest URLs)
-            if ($toolset.toolcache) {
-                foreach ($tool in $toolset.toolcache) {
-                    if ($tool.url) {
-                        $null = $expectedUrls.Add(@{
-                            Url = $tool.url
-                            Source = "Toolset:toolcache.$($tool.name)"
-                            Category = "manifests"
-                            Type = "Manifest"
-                        })
-                    }
-                }
-            }
-            
-            # Parse other sections that might contain direct URLs
-            $sections = @('dotnet', 'node', 'powershellModules', 'azureModules', 'vcRedist', 'visualStudio', 'wix')
-            foreach ($section in $sections) {
-                if ($toolset.$section) {
-                    $sectionData = $toolset.$section
-                    
-                    # Look for URL properties recursively
-                    function Find-UrlsInObject {
-                        param($obj, $path)
-                        
-                        if ($obj -is [string] -and $obj -match '^https?://') {
-                            return @{
-                                Url = $obj
-                                Source = "Toolset:$path"
-                                Category = "packages"
-                                Type = if ($obj -match '\.(json|xml)$') { "Manifest" } 
-                                       elseif ($obj -match '\.(msi|exe)$') { "Installer" } 
-                                       elseif ($obj -match '\.(zip|tar\.gz|tgz)$') { "Archive" } 
-                                       else { "Package" }
-                            }
-                        }
-                        elseif ($obj -is [PSCustomObject] -or $obj -is [hashtable]) {
-                            $results = @()
-                            $obj.PSObject.Properties | ForEach-Object {
-                                if ($_.Name -match 'url|link|download|href' -and $_.Value -match '^https?://') {
-                                    $results += @{
-                                        Url = $_.Value
-                                        Source = "Toolset:$path.$($_.Name)"
-                                        Category = "packages"
-                                        Type = if ($_.Value -match '\.(json|xml)$') { "Manifest" } 
-                                               elseif ($_.Value -match '\.(msi|exe)$') { "Installer" } 
-                                               elseif ($_.Value -match '\.(zip|tar\.gz|tgz)$') { "Archive" } 
-                                               else { "Package" }
-                                    }
-                                } else {
-                                    $subResults = Find-UrlsInObject $_.Value "$path.$($_.Name)"
-                                    if ($subResults) { $results += $subResults }
-                                }
-                            }
-                            return $results
-                        }
-                        elseif ($obj -is [array]) {
-                            $results = @()
-                            for ($i = 0; $i -lt $obj.Count; $i++) {
-                                $subResults = Find-UrlsInObject $obj[$i] "$path[$i]"
-                                if ($subResults) { $results += $subResults }
-                            }
-                            return $results
-                        }
-                    }
-                    
-                    $foundUrls = Find-UrlsInObject $sectionData $section
-                    if ($foundUrls) {
-                        foreach ($urlInfo in $foundUrls) {
-                            $null = $expectedUrls.Add($urlInfo)
-                        }
-                    }
-                }
-            }
-        }
+    # Use intelligent URL discovery instead of basic toolset parsing
+    $urlScript = Join-Path $scriptRoot "Get-CacheUrls.ps1"
+    if (-not (Test-Path $urlScript)) {
+        throw "Get-CacheUrls.ps1 not found at: $urlScript"
     }
     
-    # Get from scripts - this is where the actual downloadable URLs are
-    $buildScriptsPath = Join-Path $scriptsPath "build"
-    if (Test-Path $buildScriptsPath) {
-        $scriptFiles = Get-ChildItem $buildScriptsPath -Filter "*.ps1" -Recurse
-        
-        # Enhanced patterns to catch more URL types including common helper functions
-        $patterns = @(
-            # Standard download functions
-            'Install-Binary\s+-Url\s+"([^"]+)"',
-            'Invoke-DownloadWithRetry\s+[^"]*"([^"]+)"',
-            'Download-WithRetry\s+-Url\s+"([^"]+)"',
-            'Get-ToolsetContent\)\.([^.]+)\.url',
-            
-            # Variable assignments with URLs
-            '\$[^=]*[Uu]rl[^=]*=\s*"(https?://[^"]+)"',
-            '\$downloadUrl\s*=\s*"([^"]+)"',
-            '\$bootstrapperUrl\s*=\s*"([^"]+)"',
-            '\$.*[Bb]ase[Uu]rl[^=]*=\s*"([^"]+)"',
-            
-            # Direct URL patterns in strings
-            '"(https?://[^"]+\.(?:msi|exe|zip|tar\.gz|tgz|deb|rpm|jar|vsix))"',
-            "'(https?://[^']+\.(?:msi|exe|zip|tar\.gz|tgz|deb|rpm|jar|vsix))'",
-            
-            # Web request patterns
-            'Invoke-WebRequest[^"]*"(https?://[^"]+)"',
-            'curl[^"]*"(https?://[^"]+)"',
-            'wget[^"]*"(https?://[^"]+)"',
-            
-            # Install patterns with URL concatenation
-            '-Url\s+"([^"$]+)[^"]*"',
-            '-Url\s+\$\{[^}]+\}[^"]*"([^"]+)"',
-            
-            # GitHub and other common patterns
-            'github\.com/[^/]+/[^/]+/releases/download/[^"]+',
-            'aka\.ms/[^"]+',
-            'download\.microsoft\.com/[^"]+',
-            'static\.rust-lang\.org/[^"]+',
-            'nodejs\.org/dist/[^"]+',
-            'downloads\.haskell\.org/[^"]+',
-            'fastdl\.mongodb\.org/[^"]+',
-            'get\.enterprisedb\.com/[^"]+',
-            'cdn\.mysql\.com/[^"]+',
-            's3\.amazonaws\.com/[^"]+',
-            'cloudbase\.it/downloads/[^"]+'
-        )
-        
-        foreach ($scriptFile in $scriptFiles) {
-            $content = Get-Content $scriptFile.FullName -Raw
-            $scriptName = $scriptFile.Name
-            
-            foreach ($pattern in $patterns) {
-                $urlMatches = [regex]::Matches($content, $pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
-                foreach ($match in $urlMatches) {
-                    $url = $match.Groups[1].Value
-                    if ($url -and $url.StartsWith('http')) {
-                        # Determine type based on URL
-                        $type = "Package"
-                        if ($url -match '\.(json|xml)$') { $type = "Manifest" }
-                        elseif ($url -match '\.(ps1|sh)$') { $type = "Script" }
-                        elseif ($url -match '\.(msi|exe)$') { $type = "Installer" }
-                        elseif ($url -match '\.(zip|tar\.gz|tgz)$') { $type = "Archive" }
-                        elseif ($url -match '\.(jar)$') { $type = "Library" }
-                        
-                        $null = $expectedUrls.Add(@{
-                            Url = $url
-                            Source = "Script:$scriptName"
-                            Category = "packages"
-                            Type = $type
-                        })
-                    }
-                }
-            }
-        }
+    Write-Verbose "Using intelligent URL discovery from Get-CacheUrls.ps1"
+    $urlResults = & $urlScript -Platform $Platform -ErrorAction Stop
+    
+    if (-not $urlResults -or $urlResults.Count -eq 0) {
+        throw "No URLs discovered by Get-CacheUrls.ps1"
     }
     
-    # Remove duplicates based on URL using a HashSet for efficient deduplication
-    $uniqueUrls = [System.Collections.Generic.HashSet[string]]::new()
-    $deduplicatedUrls = [System.Collections.ArrayList]::new()
-    
-    foreach ($urlInfo in $expectedUrls) {
-        if ($uniqueUrls.Add($urlInfo.Url)) {  # Add returns true if item was added (wasn't already present)
-            $null = $deduplicatedUrls.Add($urlInfo)
-        }
-    }
-    
-    Write-Verbose "Found $($deduplicatedUrls.Count) unique URLs from toolset and scripts"
-    return $deduplicatedUrls.ToArray()
+    Write-Verbose "Discovered $($urlResults.Count) URLs using intelligent discovery"
+    return $urlResults
 }
 
 function Get-CacheStatus {
