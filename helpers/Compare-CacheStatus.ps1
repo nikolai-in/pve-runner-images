@@ -84,17 +84,17 @@ function Get-ExpectedUrls {
         if ($software.DownloadUrl) {
             # Determine URL type and cacheability
             $urlType = if ($software.DownloadUrl -match "\.json$") { "Manifest" }
-                      elseif ($software.DownloadUrl -match "\.(msi|exe|zip|tar\.gz)$") { "Package" }
-                      elseif ($software.DownloadUrl -match "github\.com.*releases") { "Release" }
-                      else { "Unknown" }
+            elseif ($software.DownloadUrl -match "\.(msi|exe|zip|tar\.gz)$") { "Package" }
+            elseif ($software.DownloadUrl -match "github\.com.*releases") { "Release" }
+            else { "Unknown" }
             
             $cacheableItems += [PSCustomObject]@{
-                Url = $software.DownloadUrl
-                Source = "Inventory:$($software.Source):$($software.Name)"
-                Type = $urlType
-                Category = $software.Category
-                SoftwareName = $software.Name
-                SoftwareVersion = $software.Version
+                Url              = $software.DownloadUrl
+                Source           = "Inventory:$($software.Source):$($software.Name)"
+                Type             = $urlType
+                Category         = $software.Category
+                SoftwareName     = $software.Name
+                SoftwareVersion  = $software.Version
                 SoftwareCategory = $software.Category
             }
         }
@@ -112,12 +112,12 @@ function Get-ExpectedUrls {
             # Only add if not already in inventory
             if (-not ($cacheableItems | Where-Object { $_.Url -eq $url.Url })) {
                 $cacheableItems += [PSCustomObject]@{
-                    Url = $url.Url
-                    Source = $url.Source
-                    Type = $url.Type
-                    Category = $url.Category
-                    SoftwareName = ""
-                    SoftwareVersion = ""
+                    Url              = $url.Url
+                    Source           = $url.Source
+                    Type             = $url.Type
+                    Category         = $url.Category
+                    SoftwareName     = ""
+                    SoftwareVersion  = ""
                     SoftwareCategory = "enhanced"
                 }
             }
@@ -159,31 +159,31 @@ function Get-CacheStatus {
         
         # Determine cacheable status with improved logic
         $cacheability = if ($hasVariables) { "Variable" }
-                       elseif ($expected.Url -match 'aka\.ms|go\.microsoft\.com/fwlink') { "Redirect" }
-                       elseif ($expected.Source -match '^Inventory:Toolset:') { "Toolset-Defined" }
-                       elseif ($expected.Source -match '^Inventory:Upstream:') { "Upstream-Verified" }
-                       elseif ($expected.Type -eq "Manifest") { "Dynamic-Content" }
-                       else { "Cacheable" }
+        elseif ($expected.Url -match 'aka\.ms|go\.microsoft\.com/fwlink') { "Redirect" }
+        elseif ($expected.Source -match '^Inventory:Toolset:') { "Toolset-Defined" }
+        elseif ($expected.Source -match '^Inventory:Upstream:') { "Upstream-Verified" }
+        elseif ($expected.Type -eq "Manifest") { "Dynamic-Content" }
+        else { "Cacheable" }
         
         # Enhanced status determination
         $downloadStatus = if ($exists) { "Cached" } 
-                         elseif ($hasVariables) { "Needs-Variable-Resolution" }
-                         elseif ($cacheability -eq "Redirect") { "Needs-Redirect-Resolution" }
-                         else { "Missing" }
+        elseif ($hasVariables) { "Needs-Variable-Resolution" }
+        elseif ($cacheability -eq "Redirect") { "Needs-Redirect-Resolution" }
+        else { "Missing" }
         
         $status += [PSCustomObject]@{
-            Url = $expected.Url
-            Source = $expected.Source
-            Type = $expected.Type
-            Category = $expected.Category
-            SoftwareName = $expected.SoftwareName
+            Url             = $expected.Url
+            Source          = $expected.Source
+            Type            = $expected.Type
+            Category        = $expected.Category
+            SoftwareName    = $expected.SoftwareName
             SoftwareVersion = $expected.SoftwareVersion
-            Cached = $exists
-            SizeMB = $size
-            HasVariables = $hasVariables
-            Cacheability = $cacheability
-            Status = $downloadStatus
-            CachePath = if ($exists) { $cachePath } else { "" }
+            Cached          = $exists
+            SizeMB          = $size
+            HasVariables    = $hasVariables
+            Cacheability    = $cacheability
+            Status          = $downloadStatus
+            CachePath       = if ($exists) { $cachePath } else { "" }
         }
     }
     
@@ -202,21 +202,21 @@ function Format-AsTable {
     # Use Out-String to capture the table properly
     $tableOutput = $Status | Format-Table -Property @(
         'Status',
-        @{Name='Software'; Expression={$_.SoftwareName}; Width=20},
-        @{Name='Version'; Expression={$_.SoftwareVersion}; Width=12},
-        @{Name='Type'; Expression={$_.Type}; Width=10},
-        @{Name='Size(MB)'; Expression={if($_.SizeMB -gt 0){$_.SizeMB}else{'-'}}; Width=8},
-        @{Name='URL'; Expression={if($_.Url.Length -gt 60){$_.Url.Substring(0,57)+'...'}else{$_.Url}}; Width=60}
+        @{Name = 'Software'; Expression = { $_.SoftwareName }; Width = 20 },
+        @{Name = 'Version'; Expression = { $_.SoftwareVersion }; Width = 12 },
+        @{Name = 'Type'; Expression = { $_.Type }; Width = 10 },
+        @{Name = 'Size(MB)'; Expression = { if ($_.SizeMB -gt 0) { $_.SizeMB }else { '-' } }; Width = 8 },
+        @{Name = 'URL'; Expression = { if ($_.Url.Length -gt 60) { $_.Url.Substring(0, 57) + '...' }else { $_.Url } }; Width = 60 }
     ) -AutoSize | Out-String
     
     Write-Host $tableOutput
     
     # Summary
     $total = $Status.Count
-    $cached = ($Status | Where-Object {$_.Cached}).Count
-    $missing = ($Status | Where-Object {$_.Status -eq "Missing"}).Count
-    $variables = ($Status | Where-Object {$_.HasVariables}).Count
-    $totalSize = ($Status | Where-Object {$_.Cached} | Measure-Object -Property SizeMB -Sum).Sum
+    $cached = ($Status | Where-Object { $_.Cached }).Count
+    $missing = ($Status | Where-Object { $_.Status -eq "Missing" }).Count
+    $variables = ($Status | Where-Object { $_.HasVariables }).Count
+    $totalSize = ($Status | Where-Object { $_.Cached } | Measure-Object -Property SizeMB -Sum).Sum
     
     Write-Host "`n=== Summary ===" -ForegroundColor Green
     Write-Host "Total Software Items: $total" -ForegroundColor Yellow
@@ -224,7 +224,7 @@ function Format-AsTable {
     Write-Host "Missing: $missing" -ForegroundColor Red  
     Write-Host "With Variables: $variables" -ForegroundColor Cyan
     Write-Host "Total Cache Size: $([Math]::Round($totalSize, 2)) MB" -ForegroundColor Yellow
-    Write-Host "Cache Coverage: $([Math]::Round(($cached/$total)*100, 1))%" -ForegroundColor $(if($cached/$total -gt 0.5){'Green'}else{'Red'})
+    Write-Host "Cache Coverage: $([Math]::Round(($cached/$total)*100, 1))%" -ForegroundColor $(if ($cached / $total -gt 0.5) { 'Green' }else { 'Red' })
 }
 
 #endregion
@@ -244,14 +244,14 @@ $cacheStatus = Get-CacheStatus -CacheLocation $CacheLocation -ExpectedUrls $expe
 
 # Calculate quick stats
 $totalUrls = $cacheStatus.Count
-$cachedCount = ($cacheStatus | Where-Object {$_.Cached}).Count
-$coverage = if ($totalUrls -gt 0) { [Math]::Round(($cachedCount/$totalUrls)*100, 1) } else { 0 }
+$cachedCount = ($cacheStatus | Where-Object { $_.Cached }).Count
+$coverage = if ($totalUrls -gt 0) { [Math]::Round(($cachedCount / $totalUrls) * 100, 1) } else { 0 }
 
 Write-Host ""
 Write-Host "Cache Analysis Complete:" -ForegroundColor Green
 Write-Host "  URLs analyzed: $totalUrls" -ForegroundColor Cyan
 Write-Host "  Cached items: $cachedCount" -ForegroundColor Green
-Write-Host "  Coverage: $coverage%" -ForegroundColor $(if($coverage -gt 50){'Green'}else{'Yellow'})
+Write-Host "  Coverage: $coverage%" -ForegroundColor $(if ($coverage -gt 50) { 'Green' }else { 'Yellow' })
 
 if ($coverage -eq 0) {
     Write-Host "Oh wonderful, zero cache coverage. Did you forget to actually download anything?" -ForegroundColor Yellow
@@ -270,19 +270,19 @@ switch ($OutputFormat) {
     }
     "Json" {
         $jsonOutput = @{
-            GeneratedAt = Get-Date
+            GeneratedAt   = Get-Date
             CacheLocation = $CacheLocation
-            Platform = $Platform
-            DataSource = "Software Inventory (Authoritative)"
-            Summary = @{
-                TotalUrls = $totalUrls
-                Cached = $cachedCount
-                Missing = ($cacheStatus | Where-Object {$_.Status -eq "Missing"}).Count
-                WithVariables = ($cacheStatus | Where-Object {$_.HasVariables}).Count
-                TotalSizeMB = [Math]::Round(($cacheStatus | Where-Object {$_.Cached} | Measure-Object -Property SizeMB -Sum).Sum, 2)
-                Coverage = $coverage
+            Platform      = $Platform
+            DataSource    = "Software Inventory (Authoritative)"
+            Summary       = @{
+                TotalUrls     = $totalUrls
+                Cached        = $cachedCount
+                Missing       = ($cacheStatus | Where-Object { $_.Status -eq "Missing" }).Count
+                WithVariables = ($cacheStatus | Where-Object { $_.HasVariables }).Count
+                TotalSizeMB   = [Math]::Round(($cacheStatus | Where-Object { $_.Cached } | Measure-Object -Property SizeMB -Sum).Sum, 2)
+                Coverage      = $coverage
             }
-            Details = $cacheStatus
+            Details       = $cacheStatus
         }
         
         $outputPath = Join-Path $scriptRoot $OutputFile

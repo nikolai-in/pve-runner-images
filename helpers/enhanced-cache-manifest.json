@@ -1,0 +1,475 @@
+{
+  "GeneratedAt": "2025-07-27T02:25:15.6905384+03:00",
+  "Platform": "windows",
+  "TotalUrls": 74,
+  "EnhancedUrls": [
+    {
+      "Source": "Toolset:toolcache.Python",
+      "Url": "https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json",
+      "Category": "manifests",
+      "Type": "Manifest"
+    },
+    {
+      "Source": "Toolset:toolcache.node",
+      "Url": "https://raw.githubusercontent.com/actions/node-versions/main/versions-manifest.json",
+      "Category": "manifests",
+      "Type": "Manifest"
+    },
+    {
+      "Source": "Toolset:toolcache.go",
+      "Url": "https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json",
+      "Category": "manifests",
+      "Type": "Manifest"
+    },
+    {
+      "Source": "Script:Configure-ImageDataFile.ps1",
+      "Url": "https://github.com/actions/runner-images/blob",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Configure-ImageDataFile.ps1",
+      "Url": "https://github.com/actions/runner-images/releases/tag/win25%2F$imageMajorVersion.$imageMinorVersion",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Configure-ImageDataFile.ps1",
+      "Url": "https://github.com/actions/runner-images/releases/tag/win22%2F$imageMajorVersion.$imageMinorVersion",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Configure-ImageDataFile.ps1",
+      "Url": "https://github.com/actions/runner-images/releases/tag/win19%2F$imageMajorVersion.$imageMinorVersion",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Configure-RemotingForAnsible.ps1",
+      "Url": "https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1",
+      "Category": "packages",
+      "Type": "Script"
+    },
+    {
+      "Source": "Script:Install-AWSTools.ps1",
+      "Url": "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/windows/SessionManagerPluginSetup.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-AzureCosmosDbEmulator.ps1",
+      "Url": "https://aka.ms/cosmosdb-emulator",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-BizTalkBuildComponent.ps1",
+      "Url": "https://aka.ms/BuildComponentSetup.EN",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-Chrome.ps1",
+      "Url": "https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build-with-downloads.json",
+      "Category": "packages",
+      "Type": "Manifest"
+    },
+    {
+      "Source": "Script:Install-Chrome.ps1",
+      "Url": "https://dl.google.com/tag/s/dl/chrome/install/googlechromestandaloneenterprise64.msi",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-CloudBase.ps1",
+      "Url": "https://cloudbase.it/downloads/CloudbaseInitSetup_x64.msi",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-CloudFoundryCli.ps1",
+      "Url": "https://packages.cloudfoundry.org/stable?release=windows64-exe&source=github",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-CodeQLBundle.ps1",
+      "Url": "https://github.com/github/codeql-action/releases/download/$($tagName)/codeql-bundle-win64.tar.gz",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "Script:Install-Docker.ps1",
+      "Url": "https://download.docker.com/win/static/stable/x86_64/",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-Docker.ps1",
+      "Url": "https://raw.githubusercontent.com/microsoft/Windows-Containers/Main/helpful_tools/Install-DockerCE/install-docker-ce.ps1",
+      "Category": "packages",
+      "Type": "Script"
+    },
+    {
+      "Source": "Script:Install-DockerCompose.ps1",
+      "Url": "https://github.com/docker/compose/releases/download/v${composeVersion}/docker-compose-windows-x86_64.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-DockerCompose.ps1 (resolved)",
+      "Url": "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-windows-x86_64.exe",
+      "Cacheability": "Resolved",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-DotnetSDK.ps1",
+      "Url": "https://dot.net/v1/dotnet-install.ps1",
+      "Category": "packages",
+      "Type": "Script"
+    },
+    {
+      "Source": "Script:Install-EdgeDriver.ps1",
+      "Url": "https://msedgedriver.microsoft.com/LATEST_RELEASE_$($edgeVersion.Major)_WINDOWS",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-EdgeDriver.ps1",
+      "Url": "https://msedgedriver.microsoft.com/$latestVersion/edgedriver_win64.zip",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "Script:Install-EdgeDriver.ps1 (resolved)",
+      "Url": "https://msedgedriver.microsoft.com/latest/edgedriver_win64.zip",
+      "Cacheability": "Resolved",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "Script:Install-Firefox.ps1",
+      "Url": "https://download.mozilla.org/?product=firefox-$($versionsManifest.LATEST_FIREFOX_VERSION)&os=win64&lang=en-US",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-Firefox.ps1",
+      "Url": "https://archive.mozilla.org/pub/firefox/releases/$($versionsManifest.LATEST_FIREFOX_VERSION)/SHA256SUMS",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-GoogleCloudCLI.ps1",
+      "Url": "https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-Haskell.ps1",
+      "Url": "https://downloads.haskell.org/~ghcup/x86_64-mingw64-ghcup.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-Haskell.ps1",
+      "Url": "https://downloads.haskell.org/~ghcup/${ghver}/x86_64-mingw64-ghcup-${ghver}.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-Haskell.ps1 (resolved)",
+      "Url": "https://downloads.haskell.org/~ghcup/0.99.0/x86_64-mingw64-ghcup-0.99.0.exe",
+      "Cacheability": "Resolved",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-JavaTools.ps1",
+      "Url": "https://repo1.maven.org/maven2/net/sourceforge/cobertura/cobertura/2.1.1/cobertura-2.1.1-bin.zip",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "Script:Install-Mingw64.ps1",
+      "Url": "https://download.qt.io/development_releases/prebuilt",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-Miniconda.ps1",
+      "Url": "https://repo.anaconda.com/miniconda/",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-MongoDB.ps1",
+      "Url": "https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-$latestVersion-signed.msi",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-MongoDB.ps1 (resolved)",
+      "Url": "https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-latest-signed.msi",
+      "Cacheability": "Resolved",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-MongoDB.ps1",
+      "Url": "https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-MysqlCli.ps1",
+      "Url": "https://downloads.mysql.com/archives/community/",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-MysqlCli.ps1",
+      "Url": "https://dev.mysql.com/downloads/mysql/${mysqlVersionMajorMinor}.html",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-MysqlCli.ps1",
+      "Url": "https://cdn.mysql.com/Downloads/MySQL-${mysqlVersionMajorMinor}/mysql-${mysqlVersionFull}-winx64.msi",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-MysqlCli.ps1",
+      "Url": "https://download.microsoft.com/download/0/5/6/056dcda9-d667-4e27-8001-8a0c6971d6b1/vcredist_x64.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-NET48-devpack.ps1",
+      "Url": "https://download.visualstudio.microsoft.com/download/pr/014120d7-d689-4305-befd-3cb711108212/0307177e14752e359fde5423ab583e43/ndp48-devpack-enu.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-NET48.ps1",
+      "Url": "https://download.visualstudio.microsoft.com/download/pr/2d6bb6b2-226a-4baa-bdec-798822606ff1/8494001c276a4b96804cde7829c04d7f/ndp48-x86-x64-allos-enu.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-NodeJS.ps1",
+      "Url": "https://nodejs.org/dist/v${nodeVersion}/node-v${nodeVersion}-x64.msi",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-NodeJS.ps1 (resolved)",
+      "Url": "https://nodejs.org/dist/v22.*/node-v22.*-x64.msi",
+      "Cacheability": "Resolved",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-PostgreSQL.ps1",
+      "Url": "https://get.enterprisedb.com/postgresql/postgresql-$majorVersion.$minorVersion-$patchVersion-windows-x64.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-PostgreSQL.ps1",
+      "Url": "https://get.enterprisedb.com/postgresql/postgresql-$toolsetVersion.$targetMinorVersions-$increment-windows-x64.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-PostgreSQL.ps1",
+      "Url": "https://git.postgresql.org/gitweb/?p=postgresql.git;a=tags",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-PowershellCore.ps1",
+      "Url": "https://github.com/PowerShell/PowerShell/releases/download/v${release}/PowerShell-${release}-win-x64.msi",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-Rust.ps1",
+      "Url": "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "Script:Install-ServiceFabricSDK.ps1",
+      "Url": "https://download.microsoft.com/download/b/8/a/b8a2fb98-0ec1-41e5-be98-9d8b5abf7856",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-SQLOLEDBDriver.ps1",
+      "Url": "https://go.microsoft.com/fwlink/?linkid=2242656",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-SQLPowerShellTools.ps1",
+      "Url": "https://download.microsoft.com/download/B/1/7/B1783FE9-717B-4F78-A39A-A2E27E3D679D/ENU/x64",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-VCRedist.ps1",
+      "Url": "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-WDK.ps1",
+      "Url": "https://go.microsoft.com/fwlink/?linkid=2166289",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "Script:Install-WDK.ps1",
+      "Url": "https://go.microsoft.com/fwlink/?linkid=2324617",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "KnownSoftware:docker-compose",
+      "Url": "https://github.com/docker/compose/releases/latest/download/docker-compose-windows-x86_64.exe",
+      "Cacheability": "GitHub-Latest",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "KnownSoftware:helm",
+      "Url": "https://github.com/helm/helm/releases/latest/download/helm-*-windows-amd64.zip",
+      "Cacheability": "GitHub-Latest",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "KnownSoftware:kubectl",
+      "Url": "https://github.com/kubernetes/kubernetes/releases/latest/download/kubernetes-client-windows-amd64.tar.gz",
+      "Cacheability": "GitHub-Latest",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "KnownSoftware:terraform",
+      "Url": "https://github.com/hashicorp/terraform/releases/latest/download/terraform_*_windows_amd64.zip",
+      "Cacheability": "GitHub-Latest",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "KnownSoftware:packer",
+      "Url": "https://github.com/hashicorp/packer/releases/latest/download/packer_*_windows_amd64.zip",
+      "Cacheability": "GitHub-Latest",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "KnownSoftware:gh",
+      "Url": "https://github.com/cli/cli/releases/latest/download/gh_*_windows_amd64.zip",
+      "Cacheability": "GitHub-Latest",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "KnownSoftware:docker",
+      "Url": "https://download.docker.com/win/static/stable/x86_64/docker-20.10.21.zip",
+      "Cacheability": "Direct",
+      "Category": "packages",
+      "Type": "Archive"
+    },
+    {
+      "Source": "KnownSoftware:nodejs-lts",
+      "Url": "https://nodejs.org/dist/v20.10.0/node-v20.10.0-x64.msi",
+      "Cacheability": "Direct",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "KnownSoftware:python",
+      "Url": "https://www.python.org/ftp/python/3.11.7/python-3.11.7-amd64.exe",
+      "Cacheability": "Direct",
+      "Category": "packages",
+      "Type": "Installer"
+    },
+    {
+      "Source": "PackageManager:chocolatey.git",
+      "Url": "https://community.chocolatey.org/api/v2/package/git",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "PackageManager:chocolatey.nodejs",
+      "Url": "https://community.chocolatey.org/api/v2/package/nodejs",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "PackageManager:chocolatey.python",
+      "Url": "https://community.chocolatey.org/api/v2/package/python",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "PackageManager:chocolatey.golang",
+      "Url": "https://community.chocolatey.org/api/v2/package/golang",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "PackageManager:chocolatey.docker-desktop",
+      "Url": "https://community.chocolatey.org/api/v2/package/docker-desktop",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "PackageManager:chocolatey.kubernetes-cli",
+      "Url": "https://community.chocolatey.org/api/v2/package/kubernetes-cli",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "PackageManager:chocolatey.terraform",
+      "Url": "https://community.chocolatey.org/api/v2/package/terraform",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "PackageManager:chocolatey.packer",
+      "Url": "https://community.chocolatey.org/api/v2/package/packer",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "PackageManager:nuget.Microsoft.Web.WebJobs.Publish",
+      "Url": "https://api.nuget.org/v3-flatcontainer/microsoft.web.webjobs.publish/index.json",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    },
+    {
+      "Source": "PackageManager:nuget.Microsoft.VisualStudio.Web.CodeGeneration.Tools",
+      "Url": "https://api.nuget.org/v3-flatcontainer/microsoft.visualstudio.web.codegeneration.tools/index.json",
+      "Cacheability": "PackageManager",
+      "Category": "packages",
+      "Type": "Package"
+    }
+  ]
+}

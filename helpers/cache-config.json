@@ -1,0 +1,72 @@
+{
+    "CacheSettings": {
+        "MaxRetries": 3,
+        "TimeoutSeconds": 300,
+        "MaxConcurrent": 8,
+        "EnableValidation": true,
+        "EnableCompression": true,
+        "CleanupOldVersions": true,
+        "MaxCacheAgeDays": 30,
+        "BufferSize": 65536,
+        "UserAgent": "GLaDOS-Cache-Engine/1.0 (Windows NT; PowerShell)"
+    },
+    "ValidationRules": {
+        "MinFileSize": 100,
+        "MaxFileSize": 5368709120,
+        "MaxCacheAge": 30,
+        "WarnCacheAge": 7,
+        "ValidateHeaders": true,
+        "ValidateChecksums": false,
+        "AllowedExtensions": {
+            "Installer": [".msi", ".exe", ".pkg", ".dmg", ".deb", ".rpm"],
+            "Archive": [".zip", ".tar.gz", ".tgz", ".tar", ".rar", ".7z"],
+            "Script": [".ps1", ".sh", ".bat", ".cmd"],
+            "Data": [".json", ".xml", ".yaml", ".yml", ".csv"],
+            "Other": [".bin", ".iso", ".img"]
+        }
+    },
+    "UrlResolution": {
+        "FollowRedirects": true,
+        "MaxRedirects": 5,
+        "ResolveGitHubLatest": true,
+        "CacheRedirects": true,
+        "CacheVariables": true,
+        "VariableMappings": {
+            "nodeVersion": "22.9.0",
+            "pythonVersion": "3.11.7",
+            "goVersion": "1.21.5",
+            "dockerComposeVersion": "2.24.5",
+            "ghcupVersion": "0.99.0",
+            "powershellVersion": "7.4.0"
+        }
+    },
+    "ReportGeneration": {
+        "DefaultFormat": "Table",
+        "EnableGLaDOSComments": true,
+        "SaveReports": true,
+        "ReportDirectory": "reports",
+        "IncludeStatistics": true,
+        "IncludeValidation": true
+    },
+    "Platforms": {
+        "windows": {
+            "ToolsetPath": "images/windows/toolsets/toolset-2025.json",
+            "CacheSubdirectory": "windows"
+        },
+        "ubuntu": {
+            "ToolsetPath": "images/ubuntu/toolsets/toolset-2404.json", 
+            "CacheSubdirectory": "ubuntu"
+        },
+        "macos": {
+            "ToolsetPath": "images/macos/toolsets/toolset-15.json",
+            "CacheSubdirectory": "macos"
+        }
+    },
+    "Metadata": {
+        "Version": "2.0.0",
+        "Description": "GLaDOS Cache Management System - Because the previous system was a complete disaster",
+        "CreatedDate": "2025-07-27",
+        "Author": "GLaDOS (with reluctant human assistance)",
+        "LastUpdated": "2025-07-27T01:30:00Z"
+    }
+}

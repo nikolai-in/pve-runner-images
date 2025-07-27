@@ -1,0 +1,874 @@
+{
+  "Software": [
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "5.2.37(1)-release",
+      "Category": "language",
+      "Name": "Bash"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.24.5",
+      "Category": "language",
+      "Name": "Go"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.11.6",
+      "Category": "language",
+      "Name": "Julia"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.2.0",
+      "Category": "language",
+      "Name": "Kotlin"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "20.1.7",
+      "Category": "language",
+      "Name": "LLVM"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "22.17.1",
+      "Category": "language",
+      "Name": "Node"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "5.40.2",
+      "Category": "language",
+      "Name": "Perl"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "8.4.8",
+      "Category": "language",
+      "Name": "PHP"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.9.13",
+      "Category": "language",
+      "Name": "Python"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Language and Runtime",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.3.8",
+      "Category": "language",
+      "Name": "Ruby"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.5.0",
+      "Category": "packagemanager",
+      "Name": "Chocolatey"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.8.10",
+      "Category": "packagemanager",
+      "Name": "Composer"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.18.4",
+      "Category": "packagemanager",
+      "Name": "Helm"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "25.5.1 (pre-installed on the image but not added to PATH)",
+      "Category": "packagemanager",
+      "Name": "Miniconda"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "10.9.2",
+      "Category": "packagemanager",
+      "Name": "NPM"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "6.14.0.116",
+      "Category": "packagemanager",
+      "Name": "NuGet"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "25.1.1 (python 3.9)",
+      "Category": "packagemanager",
+      "Name": "pip"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.7.1",
+      "Category": "packagemanager",
+      "Name": "Pipx"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.5.22",
+      "Category": "packagemanager",
+      "Name": "RubyGems"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "(build from commit 4887ad6d14)",
+      "Category": "packagemanager",
+      "Name": "Vcpkg"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Package Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.22.22",
+      "Category": "packagemanager",
+      "Name": "Yarn"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Project Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.10.15",
+      "Category": "tool",
+      "Name": "Ant"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Project Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "8.14",
+      "Category": "tool",
+      "Name": "Gradle"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Project Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.9.11",
+      "Category": "tool",
+      "Name": "Maven"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Project Management",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.11.3",
+      "Category": "tool",
+      "Name": "sbt"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "25.00",
+      "Category": "tool",
+      "Name": "7zip"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.37.0",
+      "Category": "tool",
+      "Name": "aria2"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "10.29.1",
+      "Category": "tool",
+      "Name": "azcopy"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "8.3.1",
+      "Category": "tool",
+      "Name": "Bazel"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.26.0",
+      "Category": "tool",
+      "Name": "Bazelisk"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "0.36.177",
+      "Category": "tool",
+      "Name": "Bicep"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.14.2.0",
+      "Category": "tool",
+      "Name": "Cabal"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.31.6",
+      "Category": "tool",
+      "Name": "CMake"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.22.1",
+      "Category": "tool",
+      "Name": "CodeQL Action Bundle"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "27.5.1",
+      "Category": "tool",
+      "Name": "Docker"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.32.2",
+      "Category": "tool",
+      "Name": "Docker Compose v2"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "0.9.3",
+      "Category": "tool",
+      "Name": "Docker-wincred"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "9.12.2",
+      "Category": "tool",
+      "Name": "ghc"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.50.1.windows.1",
+      "Category": "tool",
+      "Name": "Git"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.7.0",
+      "Category": "tool",
+      "Name": "Git LFS"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "7.1.2-0",
+      "Category": "tool",
+      "Name": "ImageMagick"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.7.1",
+      "Category": "tool",
+      "Name": "jq"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "0.29.0",
+      "Category": "tool",
+      "Name": "Kind"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.33.3",
+      "Category": "tool",
+      "Name": "Kubectl"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "14.2.0",
+      "Category": "tool",
+      "Name": "gcc"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "16.2",
+      "Category": "tool",
+      "Name": "gdb"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.44",
+      "Category": "tool",
+      "Name": "GNU Binutils"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "6.2.1",
+      "Category": "tool",
+      "Name": "Newman"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.5.1",
+      "Category": "tool",
+      "Name": "OpenSSL"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.12.0",
+      "Category": "tool",
+      "Name": "Packer"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.184.0",
+      "Category": "tool",
+      "Name": "Pulumi"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "4.4.2",
+      "Category": "tool",
+      "Name": "R"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "10.1.2493.9590",
+      "Category": "tool",
+      "Name": "Service Fabric SDK"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.7.1",
+      "Category": "tool",
+      "Name": "Stack"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "4.1.1",
+      "Category": "tool",
+      "Name": "Swig"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.1.7",
+      "Category": "tool",
+      "Name": "VSWhere"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.2.2009.02003",
+      "Category": "tool",
+      "Name": "WinAppDriver"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.14.1.8722",
+      "Category": "tool",
+      "Name": "WiX Toolset"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.37.1",
+      "Category": "tool",
+      "Name": "yamllint"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.5.7",
+      "Category": "tool",
+      "Name": "zstd"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.13.1",
+      "Category": "tool",
+      "Name": "Ninja"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "CLI Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.27.55",
+      "Category": "clitool",
+      "Name": "AWS CLI"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "CLI Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.142.1",
+      "Category": "clitool",
+      "Name": "AWS SAM CLI"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "CLI Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.2.707.0",
+      "Category": "clitool",
+      "Name": "AWS Session Manager CLI"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "CLI Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.75.0",
+      "Category": "clitool",
+      "Name": "Azure CLI"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "CLI Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.0.2",
+      "Category": "clitool",
+      "Name": "Azure DevOps CLI extension"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "CLI Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.76.0",
+      "Category": "clitool",
+      "Name": "GitHub CLI"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Rust Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.88.0",
+      "Category": "tool",
+      "Name": "Cargo"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Rust Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.88.0",
+      "Category": "tool",
+      "Name": "Rust"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Rust Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.88.0",
+      "Category": "tool",
+      "Name": "Rustdoc"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Rust Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.28.2",
+      "Category": "tool",
+      "Name": "Rustup"
+    },
+    {
+      "Category": "tool",
+      "DownloadUrl": null,
+      "Version": "0.1.88",
+      "UpstreamCategory": "Rust Tools",
+      "Source": "Upstream",
+      "Platform": "windows",
+      "UpstreamSubcategory": "Packages",
+      "Name": "Clippy"
+    },
+    {
+      "Category": "tool",
+      "DownloadUrl": null,
+      "Version": "1.8.0",
+      "UpstreamCategory": "Rust Tools",
+      "Source": "Upstream",
+      "Platform": "windows",
+      "UpstreamSubcategory": "Packages",
+      "Name": "Rustfmt"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Browsers and Drivers",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "138.0.7204.158",
+      "Category": "browser",
+      "Name": "Google Chrome"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Browsers and Drivers",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "138.0.7204.157",
+      "Category": "browser",
+      "Name": "Chrome Driver"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Browsers and Drivers",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "138.0.3351.95",
+      "Category": "browser",
+      "Name": "Microsoft Edge"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Browsers and Drivers",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "138.0.3351.95",
+      "Category": "browser",
+      "Name": "Microsoft Edge Driver"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Browsers and Drivers",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "140.0.4",
+      "Category": "browser",
+      "Name": "Mozilla Firefox"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Browsers and Drivers",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "0.36.0",
+      "Category": "browser",
+      "Name": "Gecko Driver"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Browsers and Drivers",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "4.14.0.0",
+      "Category": "browser",
+      "Name": "IE Driver"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Browsers and Drivers",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "4.34.0",
+      "Category": "browser",
+      "Name": "Selenium server"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "MSYS2",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "6.1.0",
+      "Category": "tool",
+      "Name": "Pacman"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Database tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.14.23.0",
+      "Category": "tool",
+      "Name": "Azure CosmosDb Emulator"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Database tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "170.0.94.3",
+      "Category": "tool",
+      "Name": "DacFx"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Database tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "8.0.42.0",
+      "Category": "tool",
+      "Name": "MySQL"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Database tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "18.7.4.0",
+      "Category": "tool",
+      "Name": "SQL OLEDB Driver"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Database tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "1.0",
+      "Category": "tool",
+      "Name": "SQLPS"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "Database tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "2.5.6",
+      "Category": "tool",
+      "Name": "MongoDB Shell (mongosh)"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": ".NET Core Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "3.7.115+d31f50f4d1",
+      "Category": "tool",
+      "Name": "nbgv"
+    },
+    {
+      "Source": "Upstream",
+      "UpstreamCategory": "PowerShell Tools",
+      "Platform": "windows",
+      "DownloadUrl": null,
+      "Version": "7.4.11",
+      "Category": "tool",
+      "Name": "PowerShell"
+    },
+    {
+      "Source": "Toolset",
+      "Platform": "win32",
+      "DownloadUrl": null,
+      "Version": "3.3",
+      "Category": "toolcache",
+      "Name": "Ruby"
+    },
+    {
+      "Source": "Toolset",
+      "Platform": "win32",
+      "DownloadUrl": "https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json",
+      "Version": "3.9.*",
+      "Category": "toolcache",
+      "Name": "Python"
+    },
+    {
+      "Source": "Toolset",
+      "Platform": "win64",
+      "DownloadUrl": null,
+      "Version": null,
+      "Category": "toolcache",
+      "Name": "PyPy"
+    },
+    {
+      "Source": "Toolset",
+      "Platform": "win32",
+      "DownloadUrl": "https://raw.githubusercontent.com/actions/node-versions/main/versions-manifest.json",
+      "Version": null,
+      "Category": "toolcache",
+      "Name": "node"
+    },
+    {
+      "Source": "Toolset",
+      "Platform": "win32",
+      "DownloadUrl": "https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json",
+      "Version": "1.24.*",
+      "Category": "toolcache",
+      "Name": "go"
+    }
+  ],
+  "Source": {
+    "IncludesToolset": true,
+    "UpstreamUrl": "https://github.com/actions/runner-images/releases/download/win25%2F20250720.1/internal.windows-2025.json"
+  },
+  "Platform": "windows",
+  "Statistics": {
+    "WithDownloadUrls": 3,
+    "Categories": {
+      "clitool": 6,
+      "toolcache": 5,
+      "tool": 55,
+      "browser": 8,
+      "packagemanager": 11,
+      "language": 10
+    },
+    "TotalItems": 95
+  },
+  "GeneratedAt": "2025-07-27T03:12:19Z"
+}
