@@ -137,7 +137,7 @@ if ($LastExitCode -ne 0) {
 
 - Coverage: 13.5% (10 of 74 URLs successfully cached)
 - Cache Size: 191.74 MB across 16 files
-- Data Sources: Software inventory + cache manifest
+- Data Sources: Software catalog + cache manifest
 - Integration: Works with existing Compare-CacheStatus.ps1
 
 **Known Issues**:

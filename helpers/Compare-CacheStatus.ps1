@@ -1,8 +1,8 @@
 ################################################################################
 ##  File:  Compare-CacheStatus.ps1
-##  Desc:  Compare authoritative software inventory vs cached files status
+##  Desc:  Compare software catalog vs cached files status
 ##  Usage: .\Compare-CacheStatus.ps1 [-CacheLocation "P:\Cache"] [-OutputFormat "Table"]
-##  Note:  Now uses Build-SoftwareInventory.ps1 for authoritative data
+##  Note:  Uses Build-SoftwareCatalog.ps1 for software data
 ################################################################################
 
 using module ./software-report-base/SoftwareReport.psm1
@@ -27,7 +27,7 @@ param(
     [switch]$AnalyzeReadmes,
     
     [Parameter(Mandatory = $false)]
-    [switch]$RefreshInventory
+    [switch]$RefreshCatalog
 )
 
 $ErrorActionPreference = "Stop"
@@ -50,57 +50,66 @@ function Get-ExpectedUrls {
         [string]$Platform
     )
     
-    Write-Host "Using authoritative software inventory instead of URL scraping..." -ForegroundColor Yellow
+    Write-Host "Using software catalog instead of URL scraping..." -ForegroundColor Yellow
     
-    # Check if we need to refresh the inventory
-    $inventoryPath = Join-Path $scriptRoot "software-inventory.json"
-    $needsRefresh = $RefreshInventory -or (-not (Test-Path $inventoryPath))
+    # Check if we need to refresh the catalog
+    $catalogPath = Join-Path $scriptRoot "software-catalog.json"
+    $needsRefresh = $RefreshCatalog -or (-not (Test-Path $catalogPath))
     
     if ($needsRefresh) {
-        Write-Host "Building fresh software inventory..." -ForegroundColor Cyan
-        $buildScript = Join-Path $scriptRoot "Build-SoftwareInventory.ps1"
+        Write-Host "Building fresh software catalog..." -ForegroundColor Cyan
+        $buildScript = Join-Path $scriptRoot "Build-SoftwareCatalog.ps1"
         if (-not (Test-Path $buildScript)) {
-            throw "Build-SoftwareInventory.ps1 not found at: $buildScript"
+            throw "Build-SoftwareCatalog.ps1 not found at: $buildScript"
         }
         
-        & $buildScript -Platform $Platform -IncludeToolsetData -ErrorAction Stop
+        & $buildScript -Platform $Platform -ErrorAction Stop
         if ($LASTEXITCODE -ne 0) {
-            throw "Failed to build software inventory"
+            throw "Failed to build software catalog"
         }
     }
     
-    # Load the software inventory
-    if (-not (Test-Path $inventoryPath)) {
-        throw "Software inventory not found at: $inventoryPath. Run with -RefreshInventory to generate."
+    # Load the software catalog
+    if (-not (Test-Path $catalogPath)) {
+        throw "Software catalog not found at: $catalogPath. Run with -RefreshCatalog to generate."
     }
     
-    $inventory = Get-Content $inventoryPath -Raw | ConvertFrom-Json
-    Write-Host "Loaded inventory with $($inventory.Statistics.TotalItems) software items" -ForegroundColor Green
+    $catalog = Get-Content $catalogPath -Raw | ConvertFrom-Json
+    Write-Host "Loaded catalog with $($catalog.TotalSoftware) software items" -ForegroundColor Green
     
-    # Convert software inventory to cacheable items
+    # Convert software catalog to cacheable items
     $cacheableItems = @()
     
-    foreach ($software in $inventory.Software) {
-        if ($software.DownloadUrl) {
-            # Determine URL type and cacheability
-            $urlType = if ($software.DownloadUrl -match "\.json$") { "Manifest" }
-            elseif ($software.DownloadUrl -match "\.(msi|exe|zip|tar\.gz)$") { "Package" }
-            elseif ($software.DownloadUrl -match "github\.com.*releases") { "Release" }
-            else { "Unknown" }
-            
-            $cacheableItems += [PSCustomObject]@{
-                Url              = $software.DownloadUrl
-                Source           = "Inventory:$($software.Source):$($software.Name)"
-                Type             = $urlType
-                Category         = $software.Category
-                SoftwareName     = $software.Name
-                SoftwareVersion  = $software.Version
-                SoftwareCategory = $software.Category
+    foreach ($software in $catalog.Software) {
+        # Skip items that require manual mapping for now
+        if ($software.RequiresManualMapping) {
+            continue
+        }
+        
+        # Extract URLs from DirectUrls that aren't TODO placeholders
+        foreach ($urlType in $software.DirectUrls.PSObject.Properties) {
+            $url = $urlType.Value
+            if ($url -and $url -notlike "*TODO*" -and $url -like "http*") {
+                # Determine URL type and cacheability
+                $urlCategory = if ($url -match "\.json$") { "Manifest" }
+                elseif ($url -match "\.(msi|exe|zip|tar\.gz)$") { "Package" }
+                elseif ($url -match "github\.com.*releases") { "Release" }
+                else { "Unknown" }
+                
+                $cacheableItems += [PSCustomObject]@{
+                    Url              = $url
+                    Source           = "Catalog:$($software.UpstreamSource):$($software.Name)"
+                    Type             = $urlCategory
+                    Category         = $software.Category
+                    SoftwareName     = $software.Name
+                    SoftwareVersion  = $software.Version
+                    SoftwareCategory = $software.Category
+                }
             }
         }
     }
     
-    Write-Host "Found $($cacheableItems.Count) cacheable URLs from software inventory" -ForegroundColor Green
+    Write-Host "Found $($cacheableItems.Count) cacheable URLs from software catalog" -ForegroundColor Green
     
     # Also include URLs from enhanced cache manifest if it exists
     $enhancedManifestPath = Join-Path $scriptRoot "enhanced-cache-manifest.json"
@@ -235,9 +244,9 @@ Write-Host "=== Analyzing Cache Status with Authoritative Data ===" -ForegroundC
 Write-Host "Finally! Using proper upstream data instead of URL scraping." -ForegroundColor Yellow
 Write-Host "Platform: $Platform | Cache: $CacheLocation" -ForegroundColor Cyan
 
-# Get expected URLs from software inventory
+# Get expected URLs from software catalog
 $expectedUrls = Get-ExpectedUrls -Platform $Platform
-Write-Host "Found $($expectedUrls.Count) cacheable URLs from software inventory" -ForegroundColor Cyan
+Write-Host "Found $($expectedUrls.Count) cacheable URLs from software catalog" -ForegroundColor Cyan
 
 # Check cache status
 $cacheStatus = Get-CacheStatus -CacheLocation $CacheLocation -ExpectedUrls $expectedUrls
@@ -273,7 +282,7 @@ switch ($OutputFormat) {
             GeneratedAt   = Get-Date
             CacheLocation = $CacheLocation
             Platform      = $Platform
-            DataSource    = "Software Inventory (Authoritative)"
+            DataSource    = "Software Catalog"
             Summary       = @{
                 TotalUrls     = $totalUrls
                 Cached        = $cachedCount

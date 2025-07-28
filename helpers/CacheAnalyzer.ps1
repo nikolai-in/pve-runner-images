@@ -140,7 +140,7 @@ function Get-SoftwareToUrlMapping {
 function Get-InstalledSoftwareInventory {
     param([string]$Platform)
     
-    # Use the software catalog instead of the old inventory system
+    # Use the software catalog system
     $scriptRoot = $PSScriptRoot
     $catalogPath = Join-Path $scriptRoot "software-catalog.json"
     
@@ -164,21 +164,7 @@ function Get-InstalledSoftwareInventory {
         }
     }
     
-    # Fallback to old inventory system if catalog doesn't exist
-    $inventoryScript = Join-Path $scriptRoot "Build-SoftwareInventory.ps1"
-    
-    if (Test-Path $inventoryScript) {
-        Write-CacheLog "Fallback: Using existing software inventory..." "Warning"
-        & $inventoryScript -Platform $Platform -IncludeToolsetData -ErrorAction SilentlyContinue
-        
-        $inventoryPath = Join-Path $scriptRoot "software-inventory.json"
-        if (Test-Path $inventoryPath) {
-            $inventory = Get-Content $inventoryPath -Raw | ConvertFrom-Json
-            return $inventory.Software
-        }
-    }
-    
-    Write-CacheLog "Could not load any software data - this is problematic" "Error"
+    Write-CacheLog "Software catalog not found at: $catalogPath. Run Build-SoftwareCatalog.ps1 to generate." "Error"
     return @()
 }
 
