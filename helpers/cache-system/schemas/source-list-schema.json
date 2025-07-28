@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Cache Source List Schema",
+  "description": "Schema for cache source list containing matched tools from upstream reports and toolsets",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "upstreamReport": {
+          "type": "object",
+          "properties": {
+            "url": { "type": "string" },
+            "version": { "type": "string" },
+            "fetchedAt": { "type": "string", "format": "date-time" }
+          },
+          "required": ["url", "version", "fetchedAt"]
+        },
+        "toolsetFiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "lastModified": { "type": "string", "format": "date-time" }
+            },
+            "required": ["path", "lastModified"]
+          }
+        }
+      },
+      "required": ["generatedAt", "upstreamReport", "toolsetFiles"]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "platform": { "type": "string" },
+          "arch": { "type": "string" },
+          "downloadUrl": { "type": "string" },
+          "sha256": { "type": "string" },
+          "size": { "type": "integer" },
+          "matchedFrom": {
+            "type": "object",
+            "properties": {
+              "upstream": { "type": "boolean" },
+              "toolset": { "type": "string" }
+            },
+            "required": ["upstream", "toolset"]
+          }
+        },
+        "required": ["name", "version", "platform", "arch", "downloadUrl", "matchedFrom"]
+      }
+    }
+  },
+  "required": ["metadata", "sources"]
+}

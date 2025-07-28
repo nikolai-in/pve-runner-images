@@ -400,3 +400,5 @@ images/*/*-temp.json
 
 # Ignore packer variables file
 variables.auto.pkrvars.hcl
+
+tmp/

@@ -1,0 +1,378 @@
+{
+  "metadata": {
+    "generatedAt": "2025-07-28T20:39:41.561Z",
+    "upstreamReport": {
+      "fetchedAt": "2025-07-28T20:39:41.535Z",
+      "version": "windows-2025",
+      "url": "file://.\\test-data\\upstream-report.json"
+    },
+    "toolsetFiles": [
+      {
+        "lastModified": "2025-07-18T15:29:06.227Z",
+        "path": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "version": "3.1",
+      "downloadUrl": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1/rubyinstaller-3.1-x64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.3.8",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "Ruby",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.2",
+      "downloadUrl": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2/rubyinstaller-3.2-x64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.3.8",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "Ruby",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.3",
+      "downloadUrl": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3/rubyinstaller-3.3-x64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.3.8",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "Ruby",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.9.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.9.*/python-3.9.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.10.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.10.*/python-3.10.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.11.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.11.*/python-3.11.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.12.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.12.*/python-3.12.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.13.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.13.*/python-3.13.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.9.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.9.*/python-3.9.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.10.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.10.*/python-3.10.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.11.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.11.*/python-3.11.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.12.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.12.*/python-3.12.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "3.13.*",
+      "downloadUrl": "https://www.python.org/ftp/python/3.13.*/python-3.13.*-amd64.exe",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.13",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "Python",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "2.7",
+      "downloadUrl": "https://downloads.python.org/pypy/pypy2.7-win64.zip",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.19 [PyPy 7.3.16]",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-cached"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "PyPy",
+      "size": 0,
+      "platform": "win64"
+    },
+    {
+      "version": "3.7",
+      "downloadUrl": "https://downloads.python.org/pypy/pypy3.7-win64.zip",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.19 [PyPy 7.3.16]",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-cached"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "PyPy",
+      "size": 0,
+      "platform": "win64"
+    },
+    {
+      "version": "3.8",
+      "downloadUrl": "https://downloads.python.org/pypy/pypy3.8-win64.zip",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.19 [PyPy 7.3.16]",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-cached"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "PyPy",
+      "size": 0,
+      "platform": "win64"
+    },
+    {
+      "version": "3.9",
+      "downloadUrl": "https://downloads.python.org/pypy/pypy3.9-win64.zip",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.19 [PyPy 7.3.16]",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-cached"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "PyPy",
+      "size": 0,
+      "platform": "win64"
+    },
+    {
+      "version": "3.10",
+      "downloadUrl": "https://downloads.python.org/pypy/pypy3.10-win64.zip",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "3.9.19 [PyPy 7.3.16]",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-cached"
+      },
+      "arch": "x86",
+      "sha256": "unknown",
+      "name": "PyPy",
+      "size": 0,
+      "platform": "win64"
+    },
+    {
+      "version": "18.*",
+      "downloadUrl": "https://nodejs.org/dist/v18.*/node-v18.*-x64.msi",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "22.17.1",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "node",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "20.*",
+      "downloadUrl": "https://nodejs.org/dist/v20.*/node-v20.*-x64.msi",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "22.17.1",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "node",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "22.*",
+      "downloadUrl": "https://nodejs.org/dist/v22.*/node-v22.*-x64.msi",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "22.17.1",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "node",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "1.22.*",
+      "downloadUrl": "https://go.dev/dl/go1.22.*.windows-amd64.msi",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "1.24.5",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "go",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "1.23.*",
+      "downloadUrl": "https://go.dev/dl/go1.23.*.windows-amd64.msi",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "1.24.5",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "go",
+      "size": 0,
+      "platform": "win32"
+    },
+    {
+      "version": "1.24.*",
+      "downloadUrl": "https://go.dev/dl/go1.24.*.windows-amd64.msi",
+      "matchedFrom": {
+        "upstream": true,
+        "upstreamVersion": "1.24.5",
+        "toolset": "C:\\Users\\tameddev\\Developer\\pve-runner-images\\images\\windows\\toolsets\\toolset-2022.json",
+        "upstreamSource": "upstream-installed"
+      },
+      "arch": "x64",
+      "sha256": "unknown",
+      "name": "go",
+      "size": 0,
+      "platform": "win32"
+    }
+  ]
+}

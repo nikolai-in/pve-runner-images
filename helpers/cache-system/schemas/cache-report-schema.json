@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Cache Report Schema",
+  "description": "Schema for cache coverage and composition reports",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "cacheDirectory": { "type": "string" },
+        "sourceListPath": { "type": "string" }
+      },
+      "required": ["generatedAt", "cacheDirectory"]
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "totalSources": { "type": "integer" },
+        "cachedSources": { "type": "integer" },
+        "missingSources": { "type": "integer" },
+        "coveragePercentage": { "type": "number", "minimum": 0, "maximum": 100 },
+        "totalCacheSize": { "type": "integer" }
+      },
+      "required": ["totalSources", "cachedSources", "missingSources", "coveragePercentage", "totalCacheSize"]
+    },
+    "cachedItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "platform": { "type": "string" },
+          "arch": { "type": "string" },
+          "filePath": { "type": "string" },
+          "fileSize": { "type": "integer" },
+          "sha256": { "type": "string" },
+          "downloadedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["name", "version", "platform", "arch", "filePath", "fileSize"]
+      }
+    },
+    "missingItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "platform": { "type": "string" },
+          "arch": { "type": "string" },
+          "downloadUrl": { "type": "string" },
+          "reason": { "type": "string" }
+        },
+        "required": ["name", "version", "platform", "arch", "downloadUrl"]
+      }
+    }
+  },
+  "required": ["metadata", "summary", "cachedItems", "missingItems"]
+}
