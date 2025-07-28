@@ -400,3 +400,8 @@ images/*/*-temp.json
 
 # Ignore packer variables file
 variables.auto.pkrvars.hcl
+
+# Cache analysis reports
+cache-report-*.md
+cache-report-*.json
+

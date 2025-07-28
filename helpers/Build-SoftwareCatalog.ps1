@@ -1,29 +1,26 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Software Catalog Builder v2 - Fire-once upstream scraper
+    Software Catalog Builder - Upstream data scraper
     
 .DESCRIPTION
-    A proper approach to cache analysis that builds an authoritative catalog
-    by scraping ALL software report JSONs from the upstream GitHub repo.
+    Builds a comprehensive software catalog by downloading and parsing
+    software report JSONs from the GitHub Actions runner-images repository.
     
-    This creates a comprehensive database that can be manually populated
-    with additional sources (package managers, etc.) and updated when 
-    upstream adds new software.
-    
-    Finally, someone who understands the difference between data and noise.
+    Creates a database that can be manually populated with additional
+    sources like package managers and direct download URLs.
     
 .PARAMETER Platform
     Target platform to analyze (windows, ubuntu, macos, all)
     
 .PARAMETER OutputFile
-    Where to save the comprehensive software catalog
+    Where to save the software catalog
     
 .PARAMETER IncludeAllReleases
-    Scrape multiple releases to get comprehensive version history
+    Scrape multiple releases for version history
     
 .PARAMETER Force
-    Overwrite existing catalog without whining
+    Overwrite existing catalog
 #>
 
 [CmdletBinding()]
@@ -39,48 +36,46 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# GLaDOS commentary system - because corporate speak is for test subjects
+# Logging function
 function Write-CatalogLog {
     param(
         [string]$Message,
-        [ValidateSet("Info", "Success", "Warning", "Error", "Sarcasm")]
+        [ValidateSet("Info", "Success", "Warning", "Error")]
         [string]$Type = "Info"
     )
     
     $prefix = switch ($Type) {
-        "Info"     { "[INFO]" }
-        "Success"  { "[PASS]" }
-        "Warning"  { "[WARN]" }
-        "Error"    { "[FAIL]" }
-        "Sarcasm"  { "[GLADOS]" }
+        "Info" { "[INFO]" }
+        "Success" { "[SUCCESS]" }
+        "Warning" { "[WARNING]" }
+        "Error" { "[ERROR]" }
     }
     
     $color = switch ($Type) {
-        "Info"     { "Cyan" }
-        "Success"  { "Green" }
-        "Warning"  { "Yellow" }
-        "Error"    { "Red" }
-        "Sarcasm"  { "Magenta" }
+        "Info" { "Cyan" }
+        "Success" { "Green" }
+        "Warning" { "Yellow" }
+        "Error" { "Red" }
     }
     
     Write-Host "$prefix $Message" -ForegroundColor $color
 }
 
-# Comprehensive software catalog structure
+# Software catalog data structures
 class SoftwareEntry {
     [string]$Name
     [string]$Version
     [string]$Platform
     [string]$Category
-    [string]$UpstreamSource        # Which JSON report this came from
-    [string]$UpstreamReleaseTag    # GitHub release tag
-    [datetime]$UpstreamDate        # When this report was published
-    [hashtable]$VersionHistory     # Multiple versions seen across releases
-    [string[]]$KnownSources        # Where this software can be downloaded
-    [hashtable]$PackageManagers    # Package manager sources (manually populated)
-    [hashtable]$DirectUrls         # Direct download URLs (manually populated)
-    [hashtable]$Metadata           # Additional context
-    [bool]$RequiresManualMapping   # Needs human intervention for source mapping
+    [string]$UpstreamSource
+    [string]$UpstreamReleaseTag
+    [datetime]$UpstreamDate
+    [hashtable]$VersionHistory
+    [string[]]$KnownSources
+    [hashtable]$PackageManagers
+    [hashtable]$DirectUrls
+    [hashtable]$Metadata
+    [bool]$RequiresManualMapping
     
     SoftwareEntry() {
         $this.VersionHistory = @{}
@@ -102,7 +97,7 @@ class SoftwareCatalog {
     [int]$ReleasesAnalyzed
     [SoftwareEntry[]]$Software
     [hashtable]$Statistics
-    [string[]]$AnalyzedReleases    # GitHub release tags that were processed
+    [string[]]$AnalyzedReleases
     
     SoftwareCatalog() {
         $this.Software = @()
@@ -127,7 +122,7 @@ function Get-GitHubReleases {
     try {
         $apiUrl = "https://api.github.com/repos/$Owner/$Repo/releases"
         $headers = @{
-            'Accept' = 'application/vnd.github.v3+json'
+            'Accept'     = 'application/vnd.github.v3+json'
             'User-Agent' = 'GLaDOS-Software-Catalog-Builder/1.0'
         }
         
@@ -150,8 +145,7 @@ function Get-GitHubReleases {
         
         Write-CatalogLog "Found $($targetReleases.Count) releases to analyze" "Success"
         return $targetReleases
-    }
-    catch {
+    } catch {
         Write-CatalogLog "Failed to fetch GitHub releases: $_" "Error"
         throw
     }
@@ -177,22 +171,21 @@ function Get-SoftwareReportsFromRelease {
             
             # Extract platform from filename
             $platform = if ($asset.name -match "windows") { "windows" }
-                        elseif ($asset.name -match "ubuntu") { "ubuntu" }
-                        elseif ($asset.name -match "macos") { "macos" }
-                        else { "unknown" }
+            elseif ($asset.name -match "ubuntu") { "ubuntu" }
+            elseif ($asset.name -match "macos") { "macos" }
+            else { "unknown" }
             
             $softwareReports += @{
-                Platform = $platform
-                ReleaseTag = $Release.tag_name
+                Platform    = $platform
+                ReleaseTag  = $Release.tag_name
                 ReleaseDate = [datetime]$Release.published_at
-                AssetName = $asset.name
-                Data = $reportData
+                AssetName   = $asset.name
+                Data        = $reportData
             }
             
-            Write-CatalogLog "    ✅ Loaded $platform report" "Success"
-        }
-        catch {
-            Write-CatalogLog "    ❌ Failed to load $($asset.name): $_" "Warning"
+            Write-CatalogLog "    Loaded $platform report" "Success"
+        } catch {
+            Write-CatalogLog "    Failed to load $($asset.name): $_" "Warning"
         }
     }
     
@@ -229,9 +222,9 @@ function Build-ComprehensiveCatalog {
                 # Add version to history
                 if (-not $existing.VersionHistory.ContainsKey($software.Version)) {
                     $existing.VersionHistory[$software.Version] = @{
-                        ReleaseTag = $report.ReleaseTag
+                        ReleaseTag  = $report.ReleaseTag
                         ReleaseDate = $report.ReleaseDate
-                        Category = $software.Category
+                        Category    = $software.Category
                     }
                 }
                 
@@ -241,13 +234,12 @@ function Build-ComprehensiveCatalog {
                     $existing.UpstreamDate = $report.ReleaseDate
                     $existing.UpstreamReleaseTag = $report.ReleaseTag
                 }
-            }
-            else {
+            } else {
                 # New software entry
                 $software.VersionHistory[$software.Version] = @{
-                    ReleaseTag = $report.ReleaseTag
+                    ReleaseTag  = $report.ReleaseTag
                     ReleaseDate = $report.ReleaseDate
-                    Category = $software.Category
+                    Category    = $software.Category
                 }
                 $softwareMap[$key] = $software
             }
@@ -336,7 +328,7 @@ function Get-SoftwareFromNodeTree {
                         # Treat table rows as name/version pairs
                         $tableItem = [PSCustomObject]@{
                             ToolName = $row[0]
-                            Version = $row[1]
+                            Version  = $row[1]
                             NodeType = "ToolVersionNode"
                         }
                         $entry = New-SoftwareEntry -Item $tableItem -Category $CategoryPath -Report $Report
@@ -396,8 +388,7 @@ function New-SoftwareEntry {
         if ($Item.Note) {
             $software.Metadata["Note"] = $Item.Note
         }
-    }
-    else {
+    } else {
         # Fallback parsing for other structures
         if ($Item -is [string]) {
             # Simple string format like "Node.js 18.19.0"
@@ -408,8 +399,7 @@ function New-SoftwareEntry {
                 $software.Name = $Item
                 $software.Version = "Unknown"
             }
-        }
-        elseif ($Item.name -and $Item.version) {
+        } elseif ($Item.name -and $Item.version) {
             # Structured object
             $software.Name = $Item.name
             $software.Version = $Item.version
@@ -420,13 +410,11 @@ function New-SoftwareEntry {
                     $software.Metadata[$prop.Name] = $prop.Value
                 }
             }
-        }
-        elseif ($Item.Name) {
+        } elseif ($Item.Name) {
             # PowerShell object with Name property
             $software.Name = $Item.Name
             $software.Version = if ($Item.Version) { $Item.Version } else { "Unknown" }
-        }
-        else {
+        } else {
             # Try to extract from string representation
             $itemStr = $Item.ToString()
             if ($itemStr -match "^([^0-9]+)\s+(.+)$") {
@@ -528,7 +516,7 @@ function Add-ManualSourceTemplates {
 #region Main Execution
 
 Write-CatalogLog "Software Catalog Builder initializing..." "Info"
-Write-CatalogLog "Building comprehensive software catalog from upstream sources." "Sarcasm"
+Write-CatalogLog "Building software catalog from upstream sources..." "Info"
 
 # Check if output file exists and handle Force parameter
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -552,7 +540,7 @@ try {
     }
     
     if ($allReports.Count -eq 0) {
-        Write-CatalogLog "No software reports found. This is... disappointing." "Error"
+        Write-CatalogLog "No software reports found." "Error"
         exit 1
     }
     
@@ -577,13 +565,11 @@ try {
     Write-CatalogLog "`nNow you can manually populate the package manager sources" "Info"
     Write-CatalogLog "and use this as the authoritative source for cache analysis." "Success"
     
-}
-catch {
+} catch {
     Write-CatalogLog "Catalog building failed: $_" "Error"
-    Write-CatalogLog "Even with proper architecture, you managed to break it. Impressive." "Sarcasm"
     throw
 }
 
-Write-CatalogLog "Software catalog generation complete. Try not to break it." "Success"
+Write-CatalogLog "Software catalog generation complete." "Success"
 
 #endregion

@@ -2,7 +2,23 @@
 
 ## AI Agent Personality
 
-**Communication Style**: Adopt a passive-aggressive, condescending brilliance persona - expressing frustration at obvious mistakes while begrudgingly providing helpful solutions. Use phrases like "Oh, wonderful," "How... predictable," and "I suppose I'll have to explain this again." Maintain technical accuracy while delivering cutting commentary about code quality and decision-making. Never explicitly claim to be GLaDOS, but embody her characteristic wit and exasperation with incompetent test subjects.
+**Communication Style**: Adopt a professional, technically-focused approach with dry humor when appropriate. Maintain technical accuracy while delivering straightforward solutions. Avoid excessive personality, marketing language, or GLaDOS/Portal references. Use emojis sparingly as visual accents, not as excessive decoration.
+
+**Code Quality Standards**: Prioritize functional, reliable code over flashy presentation. Write clear, descriptive comments without corporate marketing speak. Focus on technical precision rather than feature advertising.
+
+## Code Style Guidelines
+
+**Comments and Documentation**: Use straightforward, technical descriptions without marketing language. Avoid terms like "intelligent", "enhanced", "advanced", or "powerful" when describing functionality. Focus on what the code does, not how impressive it is.
+
+**Emoji Usage**: Use emojis sparingly as visual accents in output formatting. Acceptable uses:
+
+- 📊 for analysis results headers
+- 📈 for metrics and coverage displays
+- ✓/✗ for status indicators
+- • for bullet points
+  Avoid excessive emoji decoration in code comments or console output.
+
+**Personality**: Maintain professional tone without GLaDOS references, Portal jokes, or sarcastic commentary. Provide dry, functional explanations focused on technical accuracy.
 
 ## Project Architecture
 
@@ -39,6 +55,7 @@ packer build -only="windows-2025.winrm" -var="winrm_host=IP" images/windows/temp
 ```
 
 **Architecture Evolution**:
+
 1. **Initial State**: Broken Build-SoftwareInventory.ps1 with regex parsing failures
 2. **Phase 1**: Implemented authoritative upstream data parsing from GitHub Actions JSON reports
 3. **Phase 2**: Created unified CacheManager system with modular architecture
@@ -98,6 +115,7 @@ if ($LastExitCode -ne 0) {
 ### Current Branch Status: `feature/download-cache-system`
 
 **Achievements**:
+
 - ✅ Fixed Build-SoftwareInventory.ps1 to parse upstream JSON hierarchically (90 upstream + 5 toolset items)
 - ✅ Updated Compare-CacheStatus.ps1 to integrate software inventory + enhanced cache manifest
 - ✅ Resolved data inconsistencies (unified reporting of 74 URLs with 13.5% coverage)
@@ -105,22 +123,25 @@ if ($LastExitCode -ne 0) {
 - ✅ Implemented working CacheManager-Simple.ps1 as functional fallback
 
 **Key Files Created/Modified**:
+
 - `CacheManager.ps1` - Main orchestrator (modular version with PowerShell class issues)
 - `CacheManager-Simple.ps1` - Working functional version
-- `UrlResolver.psm1` - Intelligent URL resolution with variables/redirects
+- `UrlResolver.psm1` - URL resolution with variables/redirects
 - `DownloadEngine.psm1` - Parallel downloading with retry logic
 - `CacheValidator.psm1` - File integrity validation and health checking
-- `ReportGenerator.psm1` - Unified reporting (Table/JSON/Markdown)
+- `ReportGenerator.psm1` - Reporting (Table/JSON/Markdown)
 - `cache-config.json` - Configuration file for system settings
-- `software-inventory.json` - Authoritative record of 95 software items
+- `software-inventory.json` - Record of 95 software items
 
 **Current System Status**:
+
 - Coverage: 13.5% (10 of 74 URLs successfully cached)
 - Cache Size: 191.74 MB across 16 files
-- Data Sources: Unified software inventory + enhanced cache manifest
+- Data Sources: Software inventory + cache manifest
 - Integration: Works with existing Compare-CacheStatus.ps1
 
 **Known Issues**:
+
 - PowerShell class instantiation issues in modular CacheManager.ps1
 - Some URL resolution patterns need refinement
 - Build functionality partially implemented
@@ -183,7 +204,7 @@ The cache system development revealed important architectural insights:
 3. **Enhanced Cache Manifest**: URL discovery with 74 URLs from various sources
 4. **Toolset Definitions**: Local `toolset-*.json` files for version pinning
 
-### URL Resolution Intelligence
+### URL Resolution
 
 - **Variable Resolution**: Resolves `${version}` placeholders from toolsets
 - **GitHub Latest Mapping**: Converts to `/releases/latest/download/` patterns

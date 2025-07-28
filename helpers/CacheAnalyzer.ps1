@@ -1,19 +1,17 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    GLaDOS Cache Analysis Engine v2 - Now with actual intelligence
+    Cache analysis system for software packages and download URLs
     
 .DESCRIPTION
-    A complete rewrite of cache analysis logic that actually understands 
-    the relationship between software and cacheable resources.
+    Correlates software packages with cacheable download URLs by analyzing
+    installation scripts and software inventory data.
     
-    Unlike the previous... attempts... this version properly correlates:
-    - Software that exists in the image
-    - Installation scripts that download it  
-    - URLs that can be cached
-    - Toolset configurations that define versions
-    
-    Because apparently understanding basic data relationships is revolutionary.
+    Functions:
+    - Software package inventory
+    - Installation script analysis
+    - URL cacheability assessment
+    - Toolset version management
     
 .PARAMETER Platform
     Target platform (windows, ubuntu, macos)
@@ -46,20 +44,19 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# GLaDOS commentary system - because professional logging is for test subjects who lack personality
+# Logging function
 function Write-CacheLog {
     param(
         [string]$Message,
-        [ValidateSet("Info", "Success", "Warning", "Error", "Sarcasm")]
+        [ValidateSet("Info", "Success", "Warning", "Error")]
         [string]$Level = "Info"
     )
     
     $prefix = switch ($Level) {
         "Info" { "[INFO]" }
-        "Success" { "[PASS]" }
-        "Warning" { "[WARN]" }
-        "Error" { "[FAIL]" }
-        "Sarcasm" { "[GLADOS]" }
+        "Success" { "[SUCCESS]" }
+        "Warning" { "[WARNING]" }
+        "Error" { "[ERROR]" }
     }
     
     $color = switch ($Level) {
@@ -67,25 +64,24 @@ function Write-CacheLog {
         "Success" { "Green" }
         "Warning" { "Yellow" }
         "Error" { "Red" }
-        "Sarcasm" { "Magenta" }
     }
     
     Write-Host "$prefix $Message" -ForegroundColor $color
 }
 
-# Core data structures for intelligent cache analysis
+# Data structures for cache analysis
 class CacheableResource {
     [string]$SoftwareName
     [string]$SoftwareVersion
     [string]$Url
-    [string]$Source           # Installation script that uses this URL
-    [string]$Type            # Installer, Archive, Manifest, Package
-    [string]$Category        # language, tool, service, etc.
-    [bool]$HasVariables      # Contains ${version} or similar
-    [bool]$NeedsRedirection  # aka.ms, go.microsoft.com
-    [bool]$IsCacheable       # Can actually be cached
-    [string]$CacheStrategy   # Direct, Resolved, Redirected, Skip
-    [hashtable]$Metadata     # Additional context
+    [string]$Source
+    [string]$Type
+    [string]$Category
+    [bool]$HasVariables
+    [bool]$NeedsRedirection
+    [bool]$IsCacheable
+    [string]$CacheStrategy
+    [hashtable]$Metadata
     
     CacheableResource() {
         $this.Metadata = @{}
@@ -117,7 +113,7 @@ class CacheAnalysisResult {
 function Get-SoftwareToUrlMapping {
     param([string]$Platform)
     
-    Write-CacheLog "Building intelligent software-to-URL mapping for $Platform..." "Info"
+    Write-CacheLog "Building software-to-URL mapping for $Platform..." "Info"
     
     $scriptRoot = $PSScriptRoot
     $repoRoot = Split-Path -Parent $scriptRoot
@@ -134,22 +130,22 @@ function Get-SoftwareToUrlMapping {
     $installationMappings = Get-InstallationScriptMappings -Platform $Platform
     Write-CacheLog "Analyzed $($installationMappings.Count) installation scripts" "Info"
     
-    # 4. Build intelligent correlations
+    # 4. Build correlations
     $cacheableResources = Build-ResourceCorrelations -Software $softwareInventory -Toolset $toolsetData -Scripts $installationMappings
     
-    Write-CacheLog "Successfully correlated $($cacheableResources.Count) cacheable resources" "Success"
+    Write-CacheLog "Correlated $($cacheableResources.Count) cacheable resources" "Success"
     return $cacheableResources
 }
 
 function Get-InstalledSoftwareInventory {
     param([string]$Platform)
     
-    # Use the comprehensive software catalog instead of the old inventory system
+    # Use the software catalog instead of the old inventory system
     $scriptRoot = $PSScriptRoot
     $catalogPath = Join-Path $scriptRoot "software-catalog.json"
     
     if (Test-Path $catalogPath) {
-        Write-CacheLog "Loading comprehensive software catalog..." "Info"
+        Write-CacheLog "Loading software catalog..." "Info"
         try {
             $catalog = Get-Content $catalogPath -Raw | ConvertFrom-Json
             
@@ -321,7 +317,7 @@ function Build-ResourceCorrelations {
         [array]$Scripts
     )
     
-    Write-CacheLog "Building intelligent correlations between software, toolsets, and scripts..." "Info"
+    Write-CacheLog "Building correlations between software, toolsets, and scripts..." "Info"
     
     $resources = @()
     
@@ -388,7 +384,7 @@ function Invoke-CacheAnalysis {
         [int]$TotalSoftwareCount = 0
     )
     
-    Write-CacheLog "Performing comprehensive cache analysis..." "Info"
+    Write-CacheLog "Performing cache analysis..." "Info"
     
     $result = [CacheAnalysisResult]::new()
     $result.Platform = $Platform
@@ -426,7 +422,7 @@ function Invoke-CacheAnalysis {
     $result.Statistics["ByCategory"] = $Resources | Group-Object Category | ForEach-Object { @{$_.Name = $_.Count } }
     $result.Statistics["ByStrategy"] = $Resources | Group-Object CacheStrategy | ForEach-Object { @{$_.Name = $_.Count } }
     
-    # Generate intelligent recommendations
+    # Generate recommendations
     $result.Recommendations = Get-CacheRecommendations -Result $result
     
     Write-CacheLog "Analysis complete. Coverage: $($result.RealCoveragePercent)% ($($result.ActuallyCached)/$($result.CacheableResources))" "Success"
@@ -492,10 +488,10 @@ function Format-AnalysisResults {
 function Format-AsTable {
     param([CacheAnalysisResult]$Result)
     
-    Write-Host "`n=== Cache Analysis Results ===" -ForegroundColor Green
+    Write-Host "`n📊 Cache Analysis Results" -ForegroundColor Green
     Write-Host "Platform: $($Result.Platform)" -ForegroundColor Cyan
     Write-Host "Analyzed: $($Result.AnalyzedAt)" -ForegroundColor Cyan
-    Write-Host "Real Coverage: $($Result.RealCoveragePercent)% ($($Result.ActuallyCached)/$($Result.CacheableResources))" -ForegroundColor $(if ($Result.RealCoveragePercent -gt 50) { "Green" } else { "Yellow" })
+    Write-Host "📈 Real Coverage: $($Result.RealCoveragePercent)% ($($Result.ActuallyCached)/$($Result.CacheableResources))" -ForegroundColor $(if ($Result.RealCoveragePercent -gt 50) { "Green" } else { "Yellow" })
     Write-Host ""
     
     # Show recommendations
@@ -504,7 +500,7 @@ function Format-AsTable {
         elseif ($rec.StartsWith("WARNING")) { "Yellow" }
         elseif ($rec.StartsWith("GOOD")) { "Green" }
         else { "Cyan" }
-        Write-Host "💡 $rec" -ForegroundColor $color
+        Write-Host "• $rec" -ForegroundColor $color
     }
     Write-Host ""
     
@@ -515,7 +511,7 @@ function Format-AsTable {
             Version  = $_.SoftwareVersion
             Type     = $_.Type
             Strategy = $_.CacheStrategy
-            Cached   = if ($_.Metadata["IsCached"]) { "✅" } else { "❌" }
+            Cached   = if ($_.Metadata["IsCached"]) { "✓ Yes" } else { "✗ No" }
             URL      = if ($_.Url.Length -gt 60) { $_.Url.Substring(0, 57) + "..." } else { $_.Url }
         }
     }
@@ -538,65 +534,55 @@ function Format-AsJson {
 function Format-AsMarkdown {
     param([CacheAnalysisResult]$Result)
     
-    $coverageStatus = if ($Result.RealCoveragePercent -lt 20) { "🔴 CRITICAL" }
-                     elseif ($Result.RealCoveragePercent -lt 50) { "🟡 WARNING" }
-                     elseif ($Result.RealCoveragePercent -lt 80) { "🟢 GOOD" }
-                     else { "🌟 EXCELLENT" }
+    $coverageStatus = if ($Result.RealCoveragePercent -lt 20) { "CRITICAL" }
+                     elseif ($Result.RealCoveragePercent -lt 50) { "WARNING" }
+                     elseif ($Result.RealCoveragePercent -lt 80) { "GOOD" }
+                     else { "EXCELLENT" }
     
     $md = @"
-# 🤖 GLaDOS Cache Analysis Report
+# 📊 Cache Analysis Report
 
-> *Oh, wonderful. Another cache analysis report. I suppose you'll want me to explain why your cache coverage is... predictably inadequate.*
-
-## 📊 Executive Summary
+## Executive Summary
 
 | Metric | Value | Status |
 |--------|--------|--------|
-| **Platform** | $($Result.Platform) | 🎯 |
-| **Analysis Date** | $($Result.AnalyzedAt) | 📅 |
+| **Platform** | $($Result.Platform) | - |
+| **Analysis Date** | $($Result.AnalyzedAt) | - |
 | **Cache Coverage** | $($Result.RealCoveragePercent)% ($($Result.ActuallyCached)/$($Result.CacheableResources)) | $coverageStatus |
-| **Total Software** | $($Result.TotalSoftware) packages | 📦 |
-| **Cacheable Resources** | $($Result.CacheableResources) URLs | 🔗 |
-| **Actually Cached** | $($Result.ActuallyCached) files | 💾 |
-| **Needing Resolution** | $($Result.NeedingResolution) variables | ⚙️ |
+| **Total Software** | $($Result.TotalSoftware) packages | - |
+| **Cacheable Resources** | $($Result.CacheableResources) URLs | - |
+| **Actually Cached** | $($Result.ActuallyCached) files | - |
+| **Needing Resolution** | $($Result.NeedingResolution) variables | - |
 
-## 🎭 GLaDOS Recommendations
-
-*Because apparently I need to hold your hand through basic cache management...*
+## Recommendations
 
 "@
     
     foreach ($rec in $Result.Recommendations) {
-        $icon = if ($rec.StartsWith("CRITICAL")) { "🚨" } 
-        elseif ($rec.StartsWith("WARNING")) { "⚠️" }
-        elseif ($rec.StartsWith("GOOD")) { "✅" }
-        elseif ($rec.StartsWith("INFO")) { "ℹ️" }
-        else { "💡" }
-        
-        $md += "- $icon **$rec**`n"
+        $md += "- **$rec**`n"
     }
     
-    # Add coverage analysis with GLaDOS commentary
-    $md += "`n## 📈 Coverage Analysis`n`n"
+    # Add coverage analysis
+    $md += "`n## Coverage Analysis`n`n"
     
     if ($Result.RealCoveragePercent -eq 0) {
-        $md += "> *How absolutely... predictable. Zero percent cache coverage. It's almost impressive how you've managed to cache literally nothing useful.*`n`n"
+        $md += "Cache coverage is at 0%. No resources are currently cached.`n`n"
     }
     elseif ($Result.RealCoveragePercent -lt 10) {
-        $md += "> *Well, at least you've cached something. It's not much, but baby steps, I suppose.*`n`n"
+        $md += "Cache coverage is very low. Consider implementing a cache strategy.`n`n"
     }
     elseif ($Result.RealCoveragePercent -lt 50) {
-        $md += "> *Making progress, though 'glacial' would be a generous description of the pace.*`n`n"
+        $md += "Cache coverage is below optimal levels. Additional caching could improve performance.`n`n"
     }
     elseif ($Result.RealCoveragePercent -lt 80) {
-        $md += "> *Now we're getting somewhere. Though 'somewhere' is still disappointingly far from optimal.*`n`n"
+        $md += "Cache coverage is good but could be improved.`n`n"
     }
     else {
-        $md += "> *Well, well. Someone actually knows what they're doing. How... refreshing.*`n`n"
+        $md += "Cache coverage is excellent.`n`n"
     }
     
     # Statistics breakdown
-    $md += "### 📊 Resource Statistics`n`n"
+    $md += "### Resource Statistics`n`n"
     
     if ($Result.Statistics["ByType"]) {
         $md += "**By Type:**`n"
@@ -619,14 +605,13 @@ function Format-AsMarkdown {
     }
     
     # Detailed resource table
-    $md += "## 🔍 Detailed Resource Analysis`n`n"
-    $md += "*A comprehensive breakdown of every cacheable resource, because apparently you need to see the full scope of the situation.*`n`n"
+    $md += "## Detailed Resource Analysis`n`n"
     
     $md += "| Software | Version | Type | Strategy | Status | URL |`n"
     $md += "|----------|---------|------|----------|--------|-----|`n"
     
     foreach ($resource in $Result.Resources | Sort-Object SoftwareName, Type) {
-        $status = if ($resource.Metadata["IsCached"]) { "✅ Cached" } else { "❌ Missing" }
+        $status = if ($resource.Metadata["IsCached"]) { "Cached" } else { "Missing" }
         $url = if ($resource.Url.Length -gt 60) { $resource.Url.Substring(0, 57) + "..." } else { $resource.Url }
         
         # Clean up problematic characters for markdown
@@ -644,11 +629,10 @@ function Format-AsMarkdown {
     $variableResources = $Result.Resources | Where-Object { $_.HasVariables -or $_.NeedsRedirection }
     
     if ($missingResources.Count -gt 0 -or $variableResources.Count -gt 0) {
-        $md += "`n## 🎯 Action Items`n`n"
-        $md += "*Because I suppose I need to spell out exactly what needs to be done...*`n`n"
+        $md += "`n## Action Items`n`n"
         
         if ($missingResources.Count -gt 0) {
-            $md += "### 📥 Missing Cache Files ($($missingResources.Count) items)`n`n"
+            $md += "### Missing Cache Files ($($missingResources.Count) items)`n`n"
             $md += "Run \`CacheAnalyzer.ps1 -Action BuildCache\` to download these resources:`n`n"
             
             foreach ($missing in ($missingResources | Select-Object -First 10)) {
@@ -656,13 +640,13 @@ function Format-AsMarkdown {
             }
             
             if ($missingResources.Count -gt 10) {
-                $md += "- *...and $($missingResources.Count - 10) more*`n"
+                $md += "- ...and $($missingResources.Count - 10) more`n"
             }
             $md += "`n"
         }
         
         if ($variableResources.Count -gt 0) {
-            $md += "### ⚙️ Variable Resolution Required ($($variableResources.Count) items)`n`n"
+            $md += "### Variable Resolution Required ($($variableResources.Count) items)`n`n"
             $md += "These URLs contain variables that need resolution before caching:`n`n"
             
             foreach ($variable in ($variableResources | Select-Object -First 5)) {
@@ -672,10 +656,9 @@ function Format-AsMarkdown {
         }
     }
     
-    # Footer with GLaDOS sass
+    # Footer
     $md += "`n---`n`n"
-    $md += "*Generated by GLaDOS Cache Analysis System v2.0*  `n"
-    $md += "*Because apparently someone needs to explain basic cache management to you.*`n`n"
+    $md += "Generated by Cache Analysis System`n"
     $md += "For more information, run: \`CacheAnalyzer.ps1 -Platform $($Result.Platform) -Action Analyze\``n"
     
     return $md
@@ -685,8 +668,8 @@ function Format-AsMarkdown {
 
 #region Main Execution
 
-Write-CacheLog "Cache Analyzer v2 initializing..." "Info"
-Write-CacheLog "Attempting intelligent cache management analysis..." "Sarcasm"
+Write-CacheLog "Cache Analyzer initializing..." "Info"
+Write-CacheLog "Starting cache management analysis..." "Info"
 
 try {
     switch ($Action) {
@@ -699,7 +682,7 @@ try {
         }
         
         "Report" {
-            Write-CacheLog "Generating comprehensive cache report..." "Info"
+            Write-CacheLog "Generating cache report..." "Info"
             
             # Get software inventory and perform analysis
             $softwareInventory = Get-InstalledSoftwareInventory -Platform $Platform
@@ -724,7 +707,7 @@ try {
                     Format-AsJson -Result $results 
                 }
                 "markdown" { 
-                    Write-CacheLog "Generating markdown report with GLaDOS commentary..." "Sarcasm"
+                    Write-CacheLog "Generating markdown report..." "Info"
                     Format-AsMarkdown -Result $results 
                 }
                 default { 
@@ -746,7 +729,7 @@ try {
                 Write-CacheLog "Coverage: $($results.RealCoveragePercent)% ($($results.ActuallyCached)/$($results.CacheableResources))" "Info"
                 
                 if ($OutputFormat.ToLower() -eq "markdown") {
-                    Write-CacheLog "`nOpen the markdown file to see GLaDOS's delightful commentary on your cache management skills." "Sarcasm"
+                    Write-CacheLog "Markdown report generated." "Success"
                 }
             }
         }
@@ -767,10 +750,10 @@ try {
         }
     }
     
-    Write-CacheLog "Cache analysis completed successfully. Results above." "Success"
+    Write-CacheLog "Cache analysis completed. Results above." "Success"
 } catch {
     Write-CacheLog "Analysis failed: $_" "Error"
-    Write-CacheLog "This outcome was... predictable." "Sarcasm"
+    Write-CacheLog "Analysis complete." "Information"
     throw
 }
 
