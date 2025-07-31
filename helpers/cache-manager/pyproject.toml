@@ -1,0 +1,16 @@
+[project]
+name = "cache-manager"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "requests>=2.32.4",
+]
+
+[dependency-groups]
+dev = [
+    "click>=8.2.1",
+    "ipykernel>=6.30.0",
+    "uv>=0.8.4",
+]
